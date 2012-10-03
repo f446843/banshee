@@ -1,0 +1,29 @@
+Banshee PHP framework - Copyright (C) by Hugo Leisink <hugo@leisink.net>
+
+You are allowed to use the Banshee PHP framework under the following conditions:
+
+	1) You must leave the copyright messages inside the files which are part of
+	   the Banshee PHP framework unchanged.
+	2) You must leave the generator meta HTML tag unchanged. This tag must be
+	   present in every HTML output.
+	3) If you use (parts of) the Banshee PHP framework to build a website which
+	   you sell or rent to other people or organisations, you must inform them
+	   that "you built the website upon (parts of) the Banshee PHP framework,
+	   which is a free and open source framework".
+
+In no event shall the author of Banshee be liable for any bug in this software.
+
+The following files are not part of the Banshee PHP framework:
+
+	- CKeditor          : public/js/ckeditor/*
+	- The DHTML Calendar: public/js/calendar*.js
+	                      public/css/includes/calendar.css
+	- FPDF              : libraries/fpdf.php
+	- jQuery            : public/js/jquery/*
+	- MD5 javascript    : public/js/md5.js
+	- PHP.js            : public/js/php.js
+	- SHA1 javascript   : public/js/sha1.js
+	- SHA256 javascript : public/js/sha256.js
+	- ZIP library       : libraries/zipfile.php
+
+Look for copyright messages inside those files.

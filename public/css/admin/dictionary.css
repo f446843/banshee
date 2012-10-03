@@ -1,0 +1,27 @@
+table.list {
+	width:100%;
+	margin-bottom:15px;
+}
+table.list th.word {
+	width:250px;
+}
+
+table.edit {
+	width:100%;
+	margin-bottom:15px;
+}
+table.edit td:first-child {
+	vertical-align:top;
+	padding-top:4px;
+	width:100px;
+}
+input.button {
+	margin-right:10px;
+}
+input.text {
+	width:400px;
+}
+textarea.text {
+	width:100%;
+	height:200px;
+}

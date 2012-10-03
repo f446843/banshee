@@ -1,0 +1,51 @@
+@import url("/css/includes/calendar.css");
+
+/* Overview
+ */
+table.list {
+	width:100%;
+	margin-bottom:15px;
+}
+table.list th.date {
+	width:180px;
+}
+
+/* Form
+ */
+table.edit {
+	width:100%;
+}
+table.edit td:first-child {
+	vertical-align:top;
+	padding-top:3px;
+	width:100px;
+}
+span.date {
+	margin-right:10px;
+	cursor:pointer;
+	border-bottom:1px dashed #808080;
+	display:block;
+	width:110px;
+	float:left;
+}
+input.text {
+	width:250px;
+}
+input.time {
+	width:40px;
+}
+input#all_day {
+	margin-left:120px;
+}
+textarea.text {
+	width:100%;
+	height:250px;
+	margin-bottom:15px;
+}
+input.button {
+	margin-right:10px;
+}
+
+span#cke_editor {
+    margin-bottom:15px;
+}

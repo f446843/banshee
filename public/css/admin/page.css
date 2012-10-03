@@ -1,0 +1,49 @@
+table.list {
+	width:100%;
+}
+table.list th.url {
+	width:300px
+}
+table.list th.visible {
+	width:50px;
+}
+
+h3.spacer {
+	margin-top:20px;
+}
+
+table.edit td:first-child {
+	vertical-align:top;
+	padding-top:4px;
+}
+table.left {
+	float:left;
+}
+table.right {
+	float:right;
+}
+
+fieldset.roles {
+	margin:0 0 10px 0;
+	padding:0 5px;
+}
+
+input.text {
+	width:300px;
+}
+select.language, select.layout {
+	width:200px;
+}
+textarea.style {
+	width:360px;
+	height:140px;
+	margin-bottom:10px;
+}
+textarea.content {
+	width:100%;
+	height:200px;
+}
+input.button {
+	margin-right:10px;
+	margin-top:15px;
+}

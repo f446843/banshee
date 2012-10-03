@@ -1,0 +1,38 @@
+span.label_text, span.label_link {
+	font-size:14px;
+	width:210px;
+}
+span.label_text {
+	float:left;
+	margin-left:20px;
+}
+ul.editmenu {
+	padding:5px;
+	margin-left:0;
+	position:relative;
+}
+ul.editmenu li {
+	list-style:circle inside;
+}
+ul.editmenu input.text {
+	width:200px;
+}
+ul.editmenu li:hover {
+	list-style:disc inside;
+}
+ul.editmenu li img.grip {
+	cursor:pointer;
+}
+div.no_view, div.no_delete {
+	display:inline;
+	padding-left:51px;
+	padding-right:0px;
+}
+input.operation {
+	border:1px dotted #000000;
+	width:50px;
+	margin-right:5px;
+}
+input.button {
+	margin-right:10px;
+}

@@ -1,0 +1,13 @@
+div.question {
+	font-size:13px;
+	font-weight:bold;
+	cursor:pointer;
+}
+div.question:hover {
+	color:#ff5a00;
+}
+
+div.answer {
+	display:none;
+	margin-left:25px;
+}

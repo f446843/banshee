@@ -1,0 +1,53 @@
+div.system_messages, div.system_warnings {
+	margin-left:20px;
+}
+
+ul.admin {
+	padding:0;
+}
+
+ul.admin li {
+	list-style:none;
+	float:left;
+	text-align:center;
+	width:110px;
+	margin-bottom:20px;
+}
+ul.admin li img {
+	margin:0 auto;
+	border:0;
+}
+
+br.break {
+	clear:both;
+}
+
+img.icon {
+	display:block;
+}
+
+div.page {
+	padding-left:10px;
+}
+
+div.page h1 {
+	margin-left:20px;
+}
+
+div.section {
+	background-color:#f6f6ff;
+	border:2px solid #e0e0ff;
+	padding:10px;
+	margin-left:20px;
+	margin-bottom:20px;
+	border-radius:12px;
+}
+
+div.photo_album, div.newsletter {
+	width:385px;
+	float:left;
+	height:120px;
+}
+div.system {
+	clear:both;
+}

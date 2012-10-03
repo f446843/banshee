@@ -1,0 +1,17 @@
+div.album {
+	width:400px;
+	float:left;
+}
+
+div.album div.thumbnail {
+	float:left;
+	margin-right:20px;
+	width:150px;
+	text-align:right;
+}
+
+div.album div.thumbnail img {
+	padding:1px;
+	border:1px solid #000000;
+	background-color:#ffffff;
+}

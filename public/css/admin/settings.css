@@ -1,0 +1,20 @@
+table.list {
+	width:100%;
+}
+
+table.list th.key {
+	width:200px;
+}
+
+table.list th.type {
+	width:100px;
+}
+
+input.button {
+	margin-top:15px;
+	margin-right:10px;
+}
+
+input.text {
+	width:250px;
+}

@@ -1,0 +1,29 @@
+div.letters {
+	margin:0px 0px 20px 75px;
+}
+div.letters a {
+	margin-right:10px;
+	padding-left:5px;
+	padding-right:5px;
+	text-decoration:none;
+	font-weight:bold;
+	text-transform:uppercase;
+}
+div.letters a.selected {
+	text-decoration:underline;
+}
+
+table.dictionary {
+	width:700px;
+	border-spacing:4px;
+}
+table.dictionary td {
+	padding:5px;
+}
+table.dictionary td.word {
+	width:150px;
+	border-bottom:1px solid #f0f0f8;
+}
+table.dictionary td.short {
+	background-color:#f4f4fc;
+}

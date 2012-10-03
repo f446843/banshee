@@ -1,0 +1,82 @@
+/* List view
+ */
+div.list {
+	width:600px;
+	margin-bottom:10px;
+}
+div.list div.summary {
+	cursor:pointer;
+	margin-top:5px;
+}
+div.list div.summary:hover div.title {
+	color:#ff5a00;
+}
+div.list div.title {
+	font-weight:bold;
+	float:left;
+	margin-right:5px;
+}
+div.list div.title:after {
+	content:",";
+}
+div.list div.content {
+	display:none;
+	background-color:#f0f0f0;
+	margin:0px 0px 10px 10px;
+	padding:0px 5px 5px 15px;
+	border:1px solid #e8e8e8;
+}
+/* Month view
+ */
+table.month {
+	width:100%;
+	border-spacing:0px;
+	border-top:1px solid #000000;
+	border-left:1px solid #000000;
+	margin-bottom:15px;
+}
+table.month th {
+	border-right:1px solid #000000;
+	border-bottom:3px double #000000;
+	background-color:#dbdfeb;
+}
+table.month tr.week {
+	height:70px;
+}
+table.month td.day {
+	width:14%;
+	border-right:1px solid #000000;
+	border-bottom:1px solid #000000;
+}
+table.month td.dow6, table.month td.dow7 {
+	background-color:#f0f0f0;
+}
+table.month td.today {
+	background-color:#ffe0a0;
+}
+table.month td.today div.nr {
+	font-weight:bold;
+}
+
+/* Appointment view
+ */
+div.appointment {
+	margin-bottom:15px;
+}
+div.buttons {
+	float:right;
+}
+div.buttons input.button {
+	float:left;
+	border:1px solid #404040;
+	margin-right:0;
+	margin-left:10px;
+	font-size:10px;
+}
+div.buttons input.button:hover {
+	background-color:#fff0d0;
+}
+h5 {
+	text-align:right;
+	margin-top:-15px;
+}

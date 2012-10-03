@@ -1,0 +1,7 @@
+table.list {
+	width:100%;
+}
+table.tablemanager td:first-child {
+	vertical-align:top;
+	padding-top:3px;
+}

@@ -1,0 +1,83 @@
+#!/usr/bin/php
+<?php
+	/* This script will remove all the demo content in your Banshee installation.
+	 */
+	exit("Edit me before using!\n"); # REMOVE THIS LINE BEFORE USAGE
+
+    chdir(dirname($argv[0]));
+	require("../libraries/banshee.php");
+
+	/* Demo page files
+	 */
+    $dirs = array("views/demos", "controllers/demos", "models/demos", "public/js/demos", "public/css/demos");
+	foreach ($dirs as $dir) {
+		$dir = "../".$dir."/";
+		if (($dp = opendir($dir)) != false) {
+			while (($file = readdir($dp)) != false) {
+				if (($file == ".") || ($file == "..")) {
+					continue;
+				}
+				unlink($dir.$file);
+			}
+		}
+		rmdir($dir);
+	}
+
+	/* Demo content on disk
+	 */
+	if (($dp = opendir("../public/files")) != false) {
+		while (($file = readdir($dp)) != false) {
+			if ($file[0] == ".") {
+				continue;
+			}
+			unlink("../public/files/".$file);
+		}
+		closedir($dp);
+	}
+
+	/* Demo content in database
+	 */
+	$db = new MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
+	if ($db->connected == false) {
+		exit("Internal error: database not available.");
+	}
+
+	$tables = array("agenda", "dictionary", "cache", "collection_album", "collections",
+		"faqs", "faq_sections", "forum_last_view", "forum_messages", "forum_topics",
+		"forums", "guestbook", "languages", "links", "mailbox", "menu", "news",
+		"page_access", "pages", "poll_answers", "polls", "subscriptions",
+		"weblog_tagged", "weblog_tags", "weblog_comments", "weblogs");
+	$db->query("set foreign_key_checks=%d", 0);
+	foreach ($tables as $table) {
+		$db->query("truncate table %S", $table);
+	}
+	$db->query("set foreign_key_checks=%d", 1);
+
+	$db->query("drop table %S", "dummy");
+
+	/* Page configuration
+	 */
+	$files = array("../settings/public_pages.conf", "../settings/private_pages.conf");
+	foreach ($files as $file) {
+		if (($config = file($file)) == false) {
+			continue;
+		}
+
+		if (($fp = fopen($file, "w")) == false) {
+			continue;
+		}
+
+		foreach ($config as $line) {
+			if (substr($line, 0, 5) == "demos") {
+				continue;
+			}
+			fputs($fp, $line);
+		}
+
+		fclose($fp);
+	}
+
+	/* Update pages table
+	 */
+	system("./private_pages");
+?>

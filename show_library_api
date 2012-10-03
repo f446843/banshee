@@ -1,0 +1,142 @@
+#!/usr/bin/php
+<?php
+	/* show_library_api
+	 *
+	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * http://www.banshee-php.org/
+	 */
+
+	chdir(dirname($argv[0]));
+	require("libraries/banshee.php");
+	require("helpers/console.php");
+
+	function show_directory_content($directory) {
+		$result = array();
+
+		if (($dp = opendir($directory)) !== false) {
+			while (($file = readdir($dp)) !== false) {
+				if ($file[0] == ".") {
+					continue;
+				}
+
+				$file = $directory."/".$file;
+				if (is_dir($file)) {
+					$files = show_directory_content($file);
+					$result = array_merge($result, $files);
+				} else if (substr($file, -4) == ".php") {
+					array_push($result, $file);
+				}
+			}
+			closedir($dp);
+		}
+
+		return $result;
+	}
+
+	error_reporting(E_ALL & ~E_NOTICE);
+
+	print "Show Banshee Library API\n\n";
+
+	if (count($argv) == 1) {
+		$files = show_directory_content("libraries");
+		sort($files);
+
+		$width = get_terminal_width();
+
+		$max = 0;
+		foreach ($files as &$file) {
+			$file = substr($file, 10);
+			$len = strlen($file);
+			if ($len > $max) {
+				$max = $len;
+			}
+			unset($file);
+		}
+		$cols = floor($width / ($max + 2));
+		$col = 0;
+
+		print "Usage: ".$argv[0]." <library>\n\n";
+		print "Available libaries:\n";
+		foreach ($files as $file) {
+			print "  ".str_pad($file, $max);
+			if (++$col >= $cols) {
+				print "\n";
+				$col = 0;
+			}
+		}
+		print "\n";
+
+		return;
+	}
+	
+	$directories = array("libraries", "libraries/database");
+	foreach ($directories as $directory) {
+		if (($fp = @fopen($directory."/".$argv[1], "r")) === false) {
+			$fp = @fopen($directory."/".$argv[1].".php", "r");
+		}
+		if ($fp !== false) {
+			break;
+		}
+	}
+
+	if ($fp === false) {
+		print "Library ".$argv[1]." not found.\n";
+		return;
+	}
+
+	$in_class = $in_get = $in_set = false;
+
+	while (($line = fgets($fp)) !== false) {
+		$line = chop($line);
+
+		if (preg_match("/^\tfunction /", $line) == 1) {
+			print substr(trim($line), 0, -2).";\n";
+		} else if (preg_match("/^\t\tpublic function __([a-z]*)/", $line, $matches) == 1) {
+			switch ($matches[1]) {
+				case "construct":
+					if (substr(trim($line), 28, -3) != "") {
+						print "  constructor    ".substr(trim($line), 16, -2).";\n";
+					}
+					break;
+				case "get":
+					$in_get = true;
+					break;
+				case "set":
+					$in_set = true;
+					break;
+				default:
+					if ($matches[1] != "destruct") {
+						print "  magic method   ".substr(trim($line), 16, -2).";\n";
+					}
+			}
+		} else if (preg_match("/\t*case /", $line) == 1) {
+			list(, $property) = explode("\"", $line, 3);
+			if ($in_get) {
+				$properties[$property] .= "r";
+			} else if ($in_set) {
+				$properties[$property] .= "w";
+			}
+		} else if (preg_match("/^\t(abstract )?class /", $line) == 1) {
+			print trim($line)."\n";
+			$in_class = true;
+			$properties = array();
+		} else if (preg_match("/^\t\tpublic function /", $line) == 1) {
+			foreach ($properties as $property => $type) {
+				print "  property (".str_pad($type.")", 5).$property.";\n";
+			}
+			$properties = array();
+			print "  method         ".substr(trim($line), 16, -2).";\n";
+		} else if ($line == "\t\t\t}") {
+			if ($in_get) $in_get = false;
+			if ($in_set) $in_set = false;
+		} else if ($line == "\t}") {
+			if ($in_class) {
+				$in_class = false;
+				print "}\n\n";
+			}
+		}
+	}
+	
+	fclose($fp);
+?>

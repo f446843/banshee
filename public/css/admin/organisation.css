@@ -1,0 +1,14 @@
+table.list {
+	width:100%;
+}
+table.list th.city {
+	width:150px;
+}
+table.list th.country {
+	width:80px;
+}
+
+h4 {
+	margin:30px 0 5px 0;
+	color:#000000;
+}

@@ -1,0 +1,363 @@
+banshee (3.6) stable; urgency=low
+
+  * Removed SlimStat because there is no active development and Piwik
+    is much better. Simple log statistics module added.
+  * Mailbox module added.
+  * Added system warnings.
+  * Optional read-only access rights for modules.
+  * Small improvements.
+
+ -- Hugo Leisink <hugo@leisink.net>  Wed,  5 Sep 2012 18:31:02 +0200
+
+banshee (3.5) stable; urgency=low
+
+  * Photos are stored on disk instead of in database.
+  * Default password hash function changed from MD5 to SHA256.
+  * Several improvements and small bugfixes.
+  
+ -- Hugo Leisink <hugo@leisink.net>  Thu,  5 Jul 2012 22:11:43 +0200
+
+banshee (3.4) stable; urgency=low
+
+  * SlimStat better integrated in Banshee.
+  * Improved remove_module script.
+  * Improved security for password storage.
+  * Improved e-mail library.
+  * Notification e-mails for account creation or change.
+  * OpenStreetMap static map library added.
+  * Sitemap.xml module added.
+  * Updated FPDF to 1.7.
+  * Small improvements.
+  * Bugfix: SSO was broken due to code changes at other places.
+  * Bugfix: old way of object calling in poll, newsletter and
+    switch administration page.
+
+ -- Hugo Leisink <hugo@leisink.net>  Thu,  8 Mar 2012 19:45:59 +0100
+
+banshee (3.3) stable; urgency=low
+
+  * Layout added to pages in database.
+  * Alphabetize library added.
+  * Alphabetizing added to tablemanager library.
+  * Secure cookie library added.
+  * Input validation library added.
+  * Replaced Lightbox with Slimbox2.
+  * Photo album collection module added.
+  * Small bugfixes.
+
+ -- Hugo Leisink <hugo@leisink.net>  Sat,  8 Oct 2011 08:04:21 +0200
+
+banshee (3.2) stable; urgency=low
+
+  * Multiple read-to-use layouts available via separate theme package.
+  * Usage of ncurses removed from console scripts.
+  * jQuery updated to 1.6 and jQuery UI updated to 1.8.12.
+  * Improved SQLite driver.
+  * Bugfix: bug in resize function in image library.
+
+ -- Hugo Leisink <hugo@leisink.net>  Mon,  9 May 2011 19:17:06 +0200
+
+banshee (3.1) stable; urgency=medium
+
+  * Posts by unregistered users in forum.
+  * jQuery updated to 1.5.1.
+  * Improved session library.
+  * Helpers introduced.
+  * Small improvements and bugfixes.
+  * Script to create new modules added.
+  * Bugfix: non-admins were not able to create weblogs.
+  * Bugfix: password reset form accepted empty password.
+
+ -- Hugo Leisink <hugo@leisink.net>  Mon, 28 Mar 2011 18:46:29 +0200
+
+banshee (3.0) stable; urgency=low
+
+  * License changed. See LICENSE for the current version.
+  * Single Sign-On functionality added.
+  * Website errors included in view.
+  * System message functionality added.
+  * Improved JSON output.
+  * CKEditor updated to version 3.5.
+  * Small improvements and bugfixes.
+
+ -- Hugo Leisink <hugo@leisink.net>  Thu,  6 Jan 2011 10:32:10 +0100
+
+banshee (2.6) stable; urgency=low
+
+  * Session library added for improved session handling.
+  * Session Manager module added.
+  * Separate file for settings class. Other stuff moved to
+    libraries/configuration.php
+  * Error handling functions moved from libraries/output.php to 
+    libraries/error.php.
+  * Chunked content encoding support added to HTTP library.
+  * JSON output type added.
+  * Small improvements and bugfixes.
+  * Bugfix: small issues in splitform library.
+
+ -- Hugo Leisink <hugo@leisink.net>  Sun, 28 Nov 2010 22:31:42 +0100
+
+banshee (2.5) stable; urgency=low
+
+  * CKEditor updated to version 3.4.1.
+  * Sections added to cache library.
+  * Replaced Google Analytics with SlimStat.
+  * Small bugfixes.
+
+ -- Hugo Leisink <hugo@leisink.net>  Thu, 11 Nov 2010 12:81:43 +0100
+
+banshee (2.4) stable; urgency=low
+
+  * Photo album module added.
+  * Library for communication with other Banshee-based websites added.
+  * RSS library added and used in news and weblog module.
+  * Pagination added to forum module.
+  * Improved multilingual and UTF-8 support.
+  * Small improvements and bugfixes.
+  * Bugfix: boolean value not remembered on form error in tablemanager.
+
+ -- Hugo Leisink <hugo@leisink.net>  Thu, 16 Sep 2010 16:39:34 +0200
+
+banshee (2.3) stable; urgency=low
+
+  * Cache library added and used in XML library.
+  * GoogleMaps static map library added.
+  * Improved HTTP library.
+  * Settings in database.
+  * Small improvements.
+
+ -- Hugo Leisink <hugo@leisink.net>  Wed, 11 Aug 2010 23:17:28 +0200
+
+banshee (2.2) stable; urgency=low
+
+  * Organisation administration module added.
+  * Flags 'unique' and 'readonly' and field type 'ckeditor' added to
+    tablemanager library.
+  * FPDF library added.
+  * Apple Push Notification Service library added.
+  * Small improvements and bugfixes.
+
+ -- Hugo Leisink <hugo@leisink.net>  Wed, 14 Jul 2010 22:26:28 +0200
+
+banshee (2.1) stable; urgency=low
+
+  * Controller execute function called with URL parameters.
+  * URL parameter property added to page class.
+  * Splitform and tablemanager libraries improved and divided over controller
+    and model class.
+  * Directory support in file administration.
+  * Improved AJAX javascript library.
+  * Visible flag on weblog articles.
+  * Small improvements.
+
+ -- Hugo Leisink <hugo@leisink.net>  Tue, 29 Jun 2010  9:12:38 +0200
+
+banshee (2.0) stable; urgency=low
+
+  * Using OO for controllers and models.
+  * AJAX integrated in public/index.php.
+  * Changes in login / logout page behaviour.
+  * Pagination added to news module.
+  * XSLT template 'result' moved to 'includes/functions.xslt'.
+  * Depricated function eregi() replaced by preg_match().
+  * Small bugfixes.
+
+ -- Hugo Leisink <hugo@leisink.net>  Sun, 16 May 2010 10:28:02 +0200
+
+banshee (1.7) stable; urgency=low
+
+  * E-mail notification for forum, guestbook and weblog.
+  * Improved database drivers.
+  * Graphics library replaced by image class.
+  * Security audit and Show API tool added.
+  * Captcha library added.
+  * Object-oriented controller and model support for tablemanager and
+    splitform libraries.
+  * Small improvements and bugfixes.
+
+ -- Hugo Leisink <hugo@leisink.net>  Wed,  5 May 2010 10:41:23 +0200
+
+banshee (1.6) stable; urgency=medium
+
+  * Improved tablemanager library. Foreign key type added.
+  * Improved splitform library.
+  * CKEditor updated to version 3.2.
+  * jQuery updated to version 1.4.2.
+  * Small improvements and bugfixes.
+  * Bugfix: incorrect object-oriented page controller call in public/ajax.php.
+  * Bugfix: variables of last splitform page missing in submit data.
+  * Bugfix: access always denied to pages with parameter inside URL
+    for non-administrator users.
+
+ -- Hugo Leisink <hugo@leisink.net>  Fri, 19 Mar 2010  8:31:07 +0100
+
+banshee (1.5) stable; urgency=low
+
+  * Links module added.
+  * Improved database setup script.
+  * Bugfix: incorrect null value handling for update() in database libraries.
+  * Small bugfixes.
+
+ -- Hugo Leisink <hugo@leisink.net>  Mon, 22 Feb 2010 23:00:02 +0100
+
+banshee (1.4) stable; urgency=low
+
+  * Function add_javascript() added to output class.
+  * Support for GZip content encoding added to HTTP library.
+  * CKEditor updated to version 3.1.
+  * Improved database backup script.
+  * Small improvements.
+
+ -- Hugo Leisink <hugo@leisink.net>  Sat, 16 Jan 2010 20:59:23 +0100
+
+banshee (1.3) stable; urgency=low
+
+  * Cross-site Request Forgery protection.
+  * GZip content encoding for output.
+  * Improved multilingual support.
+  * Small improvements and bugfixes.
+
+ -- Hugo Leisink <hugo@leisink.net>  Sun,  6 Dec 2009 16:10:16 +0100
+
+banshee (1.2) stable; urgency=low
+
+  * Replaced the FCKEditor 2.6 with the CKEditor 3.0.
+  * Removed the TinyMCE editor.
+  * Layout selectable by controller and output object.
+  * More control over pagination links from tablemanager.
+  * Newsletter improvements.
+
+ -- Hugo Leisink <hugo@leisink.net>  Thu, 12 Nov 2009 23:10:45 +0100
+
+banshee (1.1) stable; urgency=low
+
+  * Newsletter functionality added.
+  * The page_access_list() function also returns public pages.
+  * Object-oriented controller and model libraries added.
+  * Database helper functions added to pagination class.
+  * Tablemanager improvements.
+  * Small improvements.
+
+ -- Hugo Leisink <hugo@leisink.net>  Sat, 31 Oct 2009 10:25:28 +0100
+
+banshee (1.0) stable; urgency=low
+
+  * Pagination library added.
+  * Old browser notification added.
+  * Bugfixes in tablemanager class.
+  * Small improvements and bugfixes.
+
+ -- Hugo Leisink <hugo@leisink.net>  Sun, 30 Aug 2009 22:21:50 +0200
+
+banshee (0.9) stable; urgency=low
+
+  * Login via one time key in URL.
+  * Virtual pages added to Access overview.
+  * Search module added.
+  * Templates added.
+  * Small improvements and bugfixes.
+
+ -- Hugo Leisink <hugo@leisink.net>  Sun, 17 May 2009  9:55:16 +0200
+
+banshee (0.8) stable; urgency=low
+
+  * Icons in the administration pages.
+  * F.A.Q. module added.
+  * Access overview module added.
+  * Action log view module added.
+  * Access by role to page in database.
+  * Improved error handling.
+  * Small improvements and bugfixes.
+
+ -- Hugo Leisink <hugo@leisink.net>  Fri, 20 Mar 2009 10:15:47 +0100
+
+banshee (0.7) stable; urgency=low
+
+  * Contact module added.
+  * Style per page instead of alternate styles.
+  * CMS pages have been given its own style.
+  * Message class replaced by language class.
+  * Administration pages show overview instead of message after creating or
+    updating an item.
+  * User warnings on page via internal messaging system.
+  * Improved role administration.
+  * Cleanup script added.
+  * Weblog administration bugfixes.
+  * Small improvements.
+
+ -- Hugo Leisink <hugo@leisink.net>  Fri, 20 Feb 2009 11:14:46 +0100
+
+banshee (0.6) stable; urgency=low
+
+  * Tablemanager library added.
+  * Splitform library added.
+  * Improved database libraries (PDO support added).
+  * Monthly view added to weblog.
+  * List view added to agenda.
+  * Configuration class replaced with setting class.
+  * Visible flag for pages in database.
+  * Small improvements.
+
+ -- Hugo Leisink <hugo@leisink.net>  Tue, 10 Feb 2009 10:30:51 +0100
+
+banshee (0.5) stable; urgency=low
+
+  * Dictionary module added.
+  * Forgot-password module added.
+  * Weblog RSS feed added.
+  * jQuery UI added.
+  * Smilies added to the forum.
+  * XML_output library splitted into XML and output.
+  * $_PAGE, $_USER and $xml renamed to $_page, $_user and $_output.
+  * Improved POP3 library.
+  * Small improvements.
+
+ -- Hugo Leisink <hugo@leisink.net>  Wed, 14 Jan 2009 15:34:07 +0100
+
+banshee (0.4) stable; urgency=low
+
+  * Weblog module added.
+  * Poll module added.
+  * News RSS feed added.
+  * Extension based view ability added.
+  * Small improvements.
+  * HTTP library extended with proxy functionality.
+
+ -- Hugo Leisink <hugo@leisink.net>  Mon, 29 Nov 2008 10:30:44 +0100
+
+banshee (0.3) stable; urgency=low
+
+  * Directory 'public/style' renamed to 'public/css'.
+  * Group renamed to role.
+  * Administration page shows pages the user has access to.
+  * Administration pages moved to 'admin' directory.
+  * Agenda module added.
+  * File module added.
+  * POP3 library added.
+  * Google Analytics scripts included.
+  * Small improvements.
+
+ -- Hugo Leisink <hugo@leisink.net>  Tue,  9 Nov 2008 22:03:54 +0100
+
+banshee (0.2) stable; urgency=low
+
+  * Class autoloader added.
+  * Each class in own file.
+  * Forum module added.
+  * Menu-in-database added.
+  * Pages-in-database added.
+  * User switch feature added.
+  * Improved last_insert_id() in database class.
+  * External libraries added: FCKeditor, jQuery.
+  * Caching in XML output library.
+
+ -- Hugo Leisink <hugo@leisink.net>  Mon, 10 Nov 2008 20:42:18 +0100
+
+banshee (0.1) stable; urgency=low
+
+  * Forked from Skeleton (http://skeleton.leisink.org/).
+  * HTML/PHP separation via XSLT.
+  * Redesign of database library.
+  * External libraries added: DHTML Calender, PHP.js, TinyMCE.
+
+ -- Hugo Leisink <hugo@leisink.net>  Sat,  4 Oct 2008 11:18:50 +0200

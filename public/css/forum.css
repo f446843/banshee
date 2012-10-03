@@ -1,0 +1,137 @@
+@import url(/css/includes/grippie.css);
+
+/* Forums
+ */
+div.forums {
+	margin-bottom:20px;
+}
+div.forums div {
+	border-bottom:1px solid #c0c0c0;
+	padding:5px;
+}
+div.forums div {
+	font-style:italic;
+}
+div.forums div:last-child {
+	border:0;
+}
+div.forums h4 {
+	font-style:normal;
+	margin:0;
+	padding:0;
+	border:0;
+}
+div.forums a {
+	font-weight:bold;
+	text-decoration:none;
+}
+
+/* Forum
+ */
+div.forum {
+	margin-bottom:20px;
+	padding-bottom:3px;
+	border-bottom:1px solid #c0c0c0;
+}
+div.forum h3 {
+	margin:0;
+	padding:3px;
+	border-bottom:1px solid #c0c0c0;
+}
+div.forum div {
+	padding:3px 3px 0px 3px;
+}
+div.forum div.title {
+	float:left;
+	width:350px;
+}
+div.forum div.starter {
+	float:left;
+	width:200px;
+}
+div.forum div.messages {
+	float:left;
+	width:50px;
+}
+div.forum a {
+	font-weight:bold;
+	text-decoration:none;
+}
+
+/* Topic
+ */
+div.topic h3 {
+	margin:0;
+	padding:0;
+	border:0;
+}
+div.topic div.message {
+	padding:0 0 10px 10px;
+}
+div.topic div.message div.author,
+div.topic div.message div.date {
+	border-bottom:1px solid #c0c0c0;
+	background-color:#f8f8f8;
+	margin:0 0 5px -10px;
+}
+div.topic div.message div.author {
+	float:left;
+	width:200px;
+}
+div.topic div.message div.registered {
+	color:#0000ff;
+}
+div.topic div.message div.moderate {
+	float:right;
+	padding-right:5px;
+	font-size:10px;
+	position:relative;
+	top:-22px;
+}
+
+span.unread {
+	color:#ff0000;
+	padding-left:2px;
+}
+
+/* New topic
+ */
+form.new_topic {
+	padding:10px 10px 0px 0px;
+}
+form.new_topic input.text {
+	width:500px;
+	margin-bottom:5px;
+}
+form.new_topic textarea.text {
+	width:100%;
+	height:200px;
+}
+
+/* New response
+ */
+form.new_response {
+	margin-top:10px;
+}
+form.new_response input.text {
+	width:300px;
+	margin-bottom:5px;
+}
+form.new_response textarea.text {
+	width:100%;
+	height:100px;
+}
+
+input.button {
+	margin-right:5px;
+}
+
+/* Smilies
+ */
+div.smilies {
+	float:right;
+}
+div.smilies img {
+	margin-left:2px;
+	cursor:pointer;
+}

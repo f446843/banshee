@@ -1,0 +1,18 @@
+ul.alphabetize {
+	padding:0;
+	height:20px;
+	margin-left:100px;
+}
+ul.alphabetize li {
+	list-style:none;
+	float:left;
+	width:20px;
+	font-family:serif;
+}
+
+ul.alphabetize li.link a {
+	color:#ff5a00;
+}
+ul.alphabetize li.nolink {
+	color:#808080;
+}

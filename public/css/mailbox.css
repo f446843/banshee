@@ -1,0 +1,47 @@
+/* Mailbox
+ */
+table.list {
+	width:100%;
+}
+
+table.list th.subject {
+	width:350px;
+}
+
+table.list th.date {
+	width:250px;
+}
+
+table.list tr.unread td {
+	font-weight:bold;
+	color:#6b6bd0;
+}
+
+/* Mail
+ */
+div.from {
+	background-color:#f0f0f0;
+	border-bottom:1px solid #c0c0c0;
+	padding:1px 3px;
+}
+
+div.message {
+	padding:3px;
+	border-bottom:1px solid #c0c0c0;
+}
+
+/* Write
+ */
+select.text, input.text {
+	width:300px;
+}
+
+textarea.text {
+	display:block;
+	width:600px;
+	height:150px;
+}
+
+input.button {
+	margin:15px 10px 0 0;
+}

@@ -1,0 +1,42 @@
+@import url("/css/includes/calendar.css");
+
+/* Overview
+ */
+table.list {
+	width:100%;
+	margin-bottom:15px;
+}
+table.list th.date {
+	width:160px;
+}
+h3 {
+	border-bottom:0;
+}
+h3.spacer {
+	margin-top:50px;
+}
+
+/* Form
+ */
+span.date {
+	margin-right:10px;
+	cursor:pointer;
+	border-bottom:1px dashed #808080;
+	display:block;
+	float:left;
+}
+input.button {
+	margin-right:10px;
+}
+table.form {
+	margin-bottom:15px;
+}
+input.text {
+	width:100px;
+}
+input.long {
+	width:300px;
+}
+table.form td:first-child {
+	width:70px;	
+}

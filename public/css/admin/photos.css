@@ -1,0 +1,17 @@
+div.albums {
+	position:absolute;
+	left:450px;
+	top:40px;
+}
+
+table.list {
+	width:100%;
+}
+
+img.preview {
+	position:absolute;
+	top:55px;
+	right:220px;
+	border:1px solid #000000;
+	padding:1px;
+}

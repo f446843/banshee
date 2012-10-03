@@ -1,0 +1,39 @@
+table.list {
+	width:100%;
+	margin-bottom:5px;
+}
+
+table.list tr.disabled td {
+	color:#a0a0a0;
+}
+
+th.username {
+	width:200px;
+}
+th.email {
+	width:250px;
+}
+th.status {
+	width:110px;
+}
+
+td.label {
+	width:100px;
+}
+
+input.text, select.text {
+	width:250px;
+}
+
+input.button, input.submit {
+	margin-right:10px;
+}
+
+input.role {
+	margin-right:5px;
+}
+
+input:disabled {
+	border-color:#606060;
+	background-color:#c0c0c0;
+}

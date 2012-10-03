@@ -1,0 +1,11 @@
+<html>
+<body style="background-color:#c0c0c0 ; font-family:sans-serif ; font-size:14px">
+<div style="min-height:250px ; max-width:800px ; margin:20px ; padding:15px ; background-color:#ffffff ; border:1px solid #000000 ; border-radius:8px">
+<div style="min-height:220px">
+<h1 style="margin:10px 0 0 0  ; font-size:20px">[TITLE]</h1>
+<div style="line-height:20px"><p>[CONTENT]</p></div>
+</div>
+<div style="padding-top:15px ; font-size:11px ; border-top:1px solid #e0e0e0">[FOOTER]</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+/* Message
+ */
+div.guestbook {
+	margin-bottom:15px;
+}
+div.guestbook div.author {
+	float:left;
+	width:300px;
+	border-bottom:1px solid #808080;
+	font-size:14px;
+	font-weight:bold;
+	background-color:#f4f4ff;
+	height:16px;
+	padding-left:4px;
+}
+div.guestbook div.timestamp {
+	border-bottom:1px solid #808080;
+	text-align:right;
+	background-color:#f4f4ff;
+	height:16px;
+	font-size:10px;
+	padding-right:4px;
+}
+div.guestbook div.message {
+	padding-left:4px;
+}
+
+/* Form
+ */
+form {
+	margin-top:40px;
+}
+input.text {
+	width:250px;
+}
+textarea.text {
+	width:500px;
+	height:100px;
+	display:block;
+	margin-top:2px;
+	margin-bottom:15px;
+}

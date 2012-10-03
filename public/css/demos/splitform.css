@@ -1,0 +1,11 @@
+textarea.text {
+	width:300px;
+	height:100px;
+}
+
+table.values {
+	margin-bottom:15px;
+}
+table.values td {
+	padding-right:25px;
+}

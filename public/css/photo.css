@@ -1,0 +1,48 @@
+div.albums ul {
+	list-style:none;
+	margin-left:0;
+}
+
+div.albums ul li {
+	display:block;
+	float:left;
+	width:400px;
+	min-height:120px;
+}
+
+div.albums div.thumbnail {
+	float:left;
+	margin-right:20px;
+	width:150px;
+	text-align:right;
+}
+
+div.albums div.thumbnail img {
+	border:1px solid #000000;
+	padding:1px;
+}
+
+div.photos {
+	margin-bottom:15px;
+}
+
+div.photos div.photo {
+	float:left;
+	height:120px;
+	width:120px;
+}
+div.photos div.photo img {
+	border:1px solid #000000;
+	padding:1px;
+	background-color:#ffffff;
+	display:block;
+	margin:auto;
+}
+
+div.photos div.photo div.box {
+	width:104px;
+	height:104px;
+	display:table-cell;
+	vertical-align:middle;
+	background-color:#f8f8f8;
+}

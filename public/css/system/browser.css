@@ -1,0 +1,22 @@
+div.browsers {
+	position:absolute;
+}
+
+div.browser {
+	background-color:#f5f5f5;
+	border:1px solid #e0e0e0;
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	float:left;
+	padding:1px 10px 1px 10px;
+	margin-right:25px;
+	text-align:center;
+	font-size:12px;
+}
+
+div.browser a img {
+	display:block;
+	margin-bottom:2px;
+	border-bottom:1px solid #e0e0e0;
+}

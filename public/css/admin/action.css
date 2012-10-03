@@ -1,0 +1,17 @@
+table.list {
+	width:100%;
+	margin-bottom:15px;
+}
+table.list th.timestamp {
+	width:170px;
+}
+table.list th.ip_address {
+	width:120px;
+}
+table.list th.user {
+	width:120px;
+}
+
+input.button {
+	margin-right:10px
+}

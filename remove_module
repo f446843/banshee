@@ -1,0 +1,222 @@
+#!/usr/bin/php
+<?php
+	/* remove_module
+	 *
+	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * http://www.banshee-php.org/
+	 */
+
+	chdir(dirname($argv[0])."/settings");
+	require("../libraries/banshee.php");
+	require("../helpers/console.php");
+
+	print "Remove Banshee Module\n\n";
+
+	$db = new MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
+	if ($db->connected == false) {
+		exit("Internal error: database not available.\n");
+	}
+
+	$banshee_modules = array(
+		"agenda" => array(
+			"pages"     => array("agenda", "admin/agenda"),
+			"tables"    => array("agenda")),
+		"captcha" => array(
+			"pages"     => array("captcha"),
+			"libraries" => array("captcha")),
+		"contact" => array(
+			"pages"     => array("contact"),
+			"settings"  => array("contact\_%")),
+		"dictionary" => array(
+			"pages"     => array("dictionary", "admin/dictionary"),
+			"tables"    => array("dictionary")),
+		"faq" => array(
+			"pages"     => array("faq", "admin/faq"),
+			"tables"    => array("faqs", "faq_sections")),
+		"forum" => array(
+			"pages"     => array("forum", "admin/forum"),
+			"tables"    => array("forum_last_view", "forum_messages", "forum_topics", "forums"),
+			"settings"  => array("forum\_%")),
+		"guestbook" => array(
+			"pages"     => array("guestbook", "admin/guestbook"),
+			"tables"    => array("guestbook"),
+			"settings"  => array("guestbook\_%")),
+		"links" => array(
+			"pages"     => array("links", "admin/links"),
+			"tables"    => array("links")),
+		"logging" => array(
+			"pages"     => array("admin/logging"),
+			"libraries" => array("logging"),
+			"tables"    => array("log_page_views", "log_referers", "log_search_queries", "log_visits")),
+		"mailbox" => array(
+			"pages"     => array("mailbox"),
+			"tables"    => array("mailbox")),
+		"news" => array(
+			"pages"     => array("news", "news.xml", "admin/news"),
+			"tables"    => array("news"),
+			"settings"  => array("news\_%")),
+		"newsletter"    => array(
+			"pages"     => array("newsletter", "admin/newsletter", "admin/subscriptions"),
+			"libraries" => array("newsletter"),
+			"tables"    => array("subscriptions"),
+			"settings"  => array("newsletter\_%")),
+		"password" => array(
+			"pages"     => array("password")),
+		"photo" => array(
+			"pages"     => array("photo", "collection", "admin/photos", "admin/albums", "admin/collection"),
+			"libraries" => array("image"),
+			"tables"    => array("collection_album", "collections", "photos", "photo_albums"),
+			"settings"  => array("photo\_%")),
+		"poll" => array(
+			"pages"     => array("poll", "admin/poll"),
+			"libraries" => array("poll"),
+			"tables"    => array("poll_answers", "polls"),
+			"settings"  => array("poll\_%")),
+		"search" => array(
+			"pages"     => array("search")),
+		"sso" => array(
+			"pages"     => array("system/sso"),
+			"libraries" => array("banshee_website")),
+		"weblog" => array(
+			"pages"     => array("weblog", "weblog.xml", "admin/weblog"),
+			"tables"    => array("weblog_tagged", "weblog_tags", "weblog_comments", "weblogs"),
+			"settings"  => array("weblog\_%")));
+
+	if (count($argv) == 1) {
+		/* Show modules
+		 */
+		$modules = array();
+		foreach ($banshee_modules as $module => $info) {
+			$file = $info["pages"][0];
+			if (file_exists("../controllers/".$file.".php") || file_exists("../views/".$file.".xslt")) {
+				array_push($modules, $module);
+			}
+		}
+		sort($modules);
+
+		$width = get_terminal_width();
+
+		$max = 0;
+		foreach ($modules as $module) {
+			$len = strlen($module);
+			if ($len > $max) {
+				$max = $len;
+			}
+		}
+		$cols = floor($width / ($max + 2));
+		$col = 0;
+
+		print "Usage: ".$argv[0]." <module>\n\n";
+		print "Available modules:\n";
+		foreach ($modules as $module) {
+			print "  ".str_pad($module, $max);
+			if (++$col >= $cols) {
+				print "\n";
+				$col = 0;
+			}
+		}
+		print "\n";
+	} else {
+		/* Remove module
+		 */
+		$params = $argv;
+		array_shift($params);
+
+		$modules = array();
+		foreach ($params as $param) {
+			if (isset($banshee_modules[$param])) {
+				array_push($modules, $banshee_modules[$param]);
+			}
+		}
+
+		$locations = array(
+			"css"  => array("public/css"),
+			"js"   => array("public/js"),
+			"php"  => array("controllers", "models"),
+			"xslt" => array("views"));
+
+		foreach ($modules as $module) {
+			/* Pages
+			 */
+			foreach ($locations as $extension => $paths) {
+				foreach ($paths as $path) {
+					foreach ($module["pages"] as $page) {
+						$file = "../".$path."/".$page.".".$extension;
+						if (file_exists($file)) {
+							printf("Deleting file %s.\n", substr($file, 3));
+							if (unlink($file) == false) {
+								printf("Error while deleting file '%s'\n", $file);
+							}
+						}
+					}
+				}
+			}
+
+			/* Libraries
+			 */
+			if (isset($module["libraries"])) {
+				foreach ($module["libraries"] as $library) {
+					$file = "../libraries/".$library.".php";
+					if (file_exists($file)) {
+						printf("Deleting library %s.\n", $file);
+						if (unlink($file) == false) {
+							printf("Error while deleting library '%s'\n", $file);
+						}
+					}
+				}
+			}
+
+			/* Tables
+			 */
+			if (isset($module["tables"])) {
+				foreach ($module["tables"] as $table) {
+					printf("Dropping table %s.\n", $table);
+					$db->query("drop table if exists %S", $table);
+				}
+			}
+
+			/* Settings
+			 */
+			if (isset($module["settings"])) {
+				foreach ($module["settings"] as $setting) {
+					$key = str_replace("\\", "", $setting);
+					$key = str_replace("%", "*", $key);
+					printf("Deleting setting %s.\n", $key);
+					$db->query("delete from settings where %S like %s", "key", $setting);
+				}
+			}
+		}
+
+		/* Page configuration
+		 */
+		printf("Removing module from page configuration files.\n");
+		foreach (array("public_pages.conf", "private_pages.conf") as $file) {
+			if (($config = file($file)) == false) {
+				continue;
+			}
+
+			if (($fp = fopen($file, "w")) == false) {
+				continue;
+			}
+
+			foreach ($config as $line) {
+				$item = chop($line);
+				list($item) = explode(":", $item, 2);
+				list($item) = explode(".", $item, 2);
+
+				foreach ($modules as $module) {
+					if (in_array($item, $module["pages"])) {
+						continue 2;
+					}
+				}
+				
+				fputs($fp, $line);
+			}
+
+			fclose($fp);
+		}
+
+		system("../database/private_pages");
+	}
+?>

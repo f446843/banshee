@@ -1,0 +1,24 @@
+table.list {
+	width:100%;
+	margin-bottom:15px;
+}
+
+table.edit {
+	width:100%;
+	margin-bottom:15px;
+}
+table.edit td:first-child {
+	width:70px;
+	vertical-align:top;
+	padding-top:3px;
+}
+input.text {
+	width:500px;
+}
+textarea.text {
+	width:100%;
+	height:300px;
+}
+input.button {
+	margin-right:10px;
+}

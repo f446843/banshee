@@ -1,0 +1,55 @@
+table.roles {
+	width:100%;
+}
+table.roles th.users {
+	width:150px;
+}
+
+ul.users {
+	list-style-type:square;
+	margin:0px;
+}
+input.button {
+	margin-top:15px;
+	margin-right:10px;
+}
+
+input.text {
+	width:250px;
+	margin-left:5px;
+}
+
+div.members {
+	margin-top:20px;
+}
+div.members ul {
+	margin:5px;
+	padding-left:15px;
+}
+
+div.role {
+	margin-top:3px;
+	min-width:250px;
+	padding-right:20px;
+	float:left;
+	position:relative;
+}
+div.role input.role {
+	position:relative;
+	top:2px;
+	margin-right:3px;
+}
+div.role select.role {
+	margin-right:3px;
+	border:1;
+	height:19px;
+}
+
+h4 {
+	margin:30px 0 5px 0;
+	color:#000000;
+}
+
+table.list {
+	width:100%;
+}

@@ -1,0 +1,92 @@
+#!/usr/bin/php
+<?php
+	chdir(dirname($argv[0]));
+	require("../libraries/banshee.php");
+	require("../libraries/settings.php");
+	require("../libraries/security.php");
+
+	if (DB_USERNAME == "root") {
+		exit("DB_USERNAME has been set to 'root' in settings/website.conf. This is an insecure setting! Setup aborted.\n");
+	}
+
+	printf("This script will create a MySQL user '%s' and the database '%s'.\n\n", DB_USERNAME, DB_DATABASE);
+	print "Make sure the database settings in settings/website.conf are correct!\n\n";
+
+	/* Get MySQL root password
+	 */
+	do {
+		print "Enter MySQL root password: ";
+		system("stty -echo");
+		$password = trim(fgets(STDIN));
+		system("stty echo");
+		print "\n";
+	} while ($password == "");
+
+	/* Connect to MySQL server
+	 */
+	ob_start();
+	$db = new MySQLi_connection(DB_HOSTNAME, "mysql", "root", $password);
+	ob_end_clean();
+
+	if ($db->connected == false) {
+		exit("Can't connect to MySQL database (root@mysql).\n");
+	}
+
+	$db->query("begin");
+
+	/* Create database
+	 */
+	$query = "create database if not exists %S character set utf8";
+	if ($db->query($query, DB_DATABASE) == false) {
+		$db->query("rollback");
+		exit("Error creating database\n");
+	}
+
+	/* Create user
+	 */
+	$query = "select count(*) as count from user where User=%s";
+	if (($users = $db->execute($query, DB_USERNAME)) === false) {
+		$db->query("rollback");
+		exit("Error checking for user\n");
+	}
+	if ($users[0]["count"] == 0) {
+		$query = "create user %s@%s identified by %s";
+		if ($db->query($query, DB_USERNAME, "localhost", DB_PASSWORD) == false) {
+			$db->query("rollback");
+			exit("Error creating user\n");
+		}
+	}
+
+	/* Set access rights
+	 */
+	$rights = array(
+		"select", "insert", "update", "delete",
+		"create", "drop", "alter", "index", "lock tables",
+		"create view", "show view");
+
+	$query = "grant ".implode(", ", $rights)." on %S.* to %s@%s";
+	if ($db->query($query, DB_DATABASE, DB_USERNAME, "localhost") == false) {
+		$db->query("rollback");
+		exit("Error setting access rights\n");
+	}
+
+	/* Commit changes
+	 */
+	$db->query("commit");
+	$db->query("flush privileges");
+	unset($db);
+
+	/* Import tables
+	 */
+	system("mysql -u \"".DB_USERNAME."\" --password=\"".DB_PASSWORD."\" \"".DB_DATABASE."\" < mysql.sql");
+
+	/* Change default settings
+	 */
+	$db = new MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
+	if ($db->connected == false) {
+		exit("Can't connect to MySQL database (".DB_USERNAME."@".DB_DATABASE.").\n");
+	}
+
+	$settings = new settings($db);
+	$settings->secret_website_code = random_string();
+?>

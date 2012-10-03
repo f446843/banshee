@@ -1,0 +1,18 @@
+ul.pagination {
+	padding:0;
+	height:20px;
+	margin-left:250px;
+}
+ul.pagination li {
+	list-style:none;
+	float:left;
+	width:30px;
+	font-family:serif;
+}
+
+ul.pagination li.link a {
+	color:#ff5a00;
+}
+ul.pagination li.nolink {
+	color:#808080;
+}

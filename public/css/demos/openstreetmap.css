@@ -1,0 +1,22 @@
+img.map {
+	display:block;
+	border:1px solid #000000;
+	margin-bottom:15px;
+	padding:3px;
+}
+
+div.route {
+	margin-bottom:15px;
+}
+
+div.route ul.route {
+	margin-left:20px;
+}
+
+div.route div.info {
+	float:right;
+	position:relative;
+	top:-18px;
+}
+
+

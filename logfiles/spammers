@@ -1,0 +1,11 @@
+#!/bin/sh
+
+cd `dirname $0`
+
+echo "IP addresses:"
+tail -500 spam.log | grep -v "blocked ip" | cut -f1 -d"|" | sort | uniq -c | sort -rn | head -10
+
+echo
+
+echo "Subnets:"
+cut -f1 -d"|" spam.log | cut -f1,2,3 -d"." | sort | uniq -c | sort -rn | head -10

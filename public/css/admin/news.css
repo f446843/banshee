@@ -1,0 +1,38 @@
+/* Overview
+ */
+table.list {
+	margin-bottom:15px;
+	width:100%;
+}
+
+table.list th.timestamp {
+	width:180px;
+}
+
+/* Edit
+ */
+table.tablemanager {
+	width:800px;
+}
+table.tablemanager td:first-child {
+	width:50px;
+}
+
+table.tablemanager tr.content td:first-child {
+	padding-top:3px;
+	vertical-align:top;
+}
+
+input.text {
+	width:500px;
+}
+
+div.page table.tablemanager textarea.text {
+	width:100%;
+	height:300px;
+}
+
+span#cke_editor {
+	margin-top:5px;
+    margin-bottom:15px;
+}

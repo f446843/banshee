@@ -1,0 +1,49 @@
+@import url(/css/includes/grippie.css);
+
+/* Overview
+ */
+table.list {
+	width:100%;
+	margin-bottom:15px;
+}
+table.list th.author {
+	width:170px;
+}
+table.list th.timestamp {
+	width:180px;
+}
+
+/* Edit
+ */
+input.text {
+	width:400px;
+}
+textarea.text {
+	width:800px;
+	height:250px;
+	display:block;
+	margin-top:5px;
+	margin-bottom:10px;
+}
+div.tags span input {
+	margin-right:2px;
+}
+div.tags span {
+	margin-right:20px;
+}
+input.button {
+	margin-right:10px;
+	display:inline;
+}
+span#cke_editor {
+	margin-top:10px;
+}
+
+/* Comments
+ */
+h3 {
+	margin-top:40px;
+}
+table.list th.delete {
+	width:25px;
+}

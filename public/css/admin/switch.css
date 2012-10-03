@@ -1,0 +1,18 @@
+table.list {
+	width:100%;
+}
+table.list th.username {
+	width:150px;
+}
+table.list th.email {
+	width:250px;
+}
+table.list th.switch {
+	width:100px;
+}
+input.switch {
+	border:1px solid #000000;
+}
+table.list {
+	margin-bottom:15px;
+}

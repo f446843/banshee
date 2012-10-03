@@ -1,0 +1,22 @@
+table.list {
+	width:100%;
+	margin-bottom:15px;
+}
+
+input.text {
+	width:250px;
+}
+
+input.button {
+	margin-right:10px;
+}
+
+table.edit {
+	margin-bottom:15px;
+}
+
+table.edit td:first-child {
+	vertical-align:top;
+	padding-top:3px;
+	width:70px;
+}

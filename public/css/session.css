@@ -1,0 +1,16 @@
+table.list {	
+	width:100%;
+	margin-bottom:15px;
+}
+
+table.list tr.current td {
+	font-weight:bold;
+}
+
+table.edit {
+	margin-bottom:15px;
+}
+
+input.button {
+	margin-right:10px;
+}

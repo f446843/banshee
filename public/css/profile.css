@@ -1,0 +1,15 @@
+input.text {
+	width:250px;
+}
+input.button {
+	margin-right:10px;
+}
+
+table.form {
+	margin-bottom:15px;
+}
+
+table.form tr.current td {
+	height:30px;
+	vertical-align:bottom;
+}

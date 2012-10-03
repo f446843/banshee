@@ -1,0 +1,114 @@
+/* Graphs
+ */
+div.graph {
+	margin-bottom:20px;
+}
+
+div.graph div.column {
+	float:left;
+	margin-right:1px;
+	background-color:#f0f0f0;
+	position:relative;
+}
+
+div.graph div.bar {
+	background-color:#ff0000;
+	position:absolute;
+	bottom:0;
+}
+
+div.graph div.info {
+	position:relative;
+	top:-26px;
+	left:200px;
+	height:0px;
+	width:300px;
+}
+
+div.graph div.info span {
+	margin-right:30px;
+}
+
+/* Deselect
+ */
+p.deselect {
+	position:relative;
+	top:-30px;
+	text-align:right;
+	height:0;
+}
+
+/* Top pages
+ */
+div.pages {
+	width:410px;
+	float:left;
+	margin-bottom:20px;
+}
+
+div.pages div.toppage {
+	background-color:#f0f0f0;
+	border-bottom:1px solid #e0e0e0;
+	padding:1px 5px;
+	margin-bottom:1px;
+}
+
+/* Search queries
+ */
+div.search {
+	float:right;
+	width:410px;
+}
+
+div.search div.query {
+	background-color:#f0f0f0;
+	border-bottom:1px solid #e0e0e0;
+	padding:1px 5px;
+	margin-bottom:1px;
+}
+
+/* Referers
+ */
+div.referers {
+	margin-bottom:20px;
+}
+
+div.referers div.host {
+	background-color:#f0f0f0;
+	border-bottom:1px solid #e0e0e0;
+	padding:1px 5px;
+	margin-bottom:1px;
+}
+
+div.referers div.referer form {
+	text-align:right;
+	position:relative;
+	top:-20px;
+	height:0;
+	margin-right:10px;
+}
+
+div.referers div.referer form input {
+	font-size:9px;
+}
+
+div.referers div.host:hover {
+	cursor:pointer;
+}
+
+div.referers div.referer {
+	display:none;
+}
+
+div.referers div.referer ul {
+	list-style:inside;
+	padding-left:10px;
+}
+
+div.referers div.referer ul li a {
+	display:inline-block;
+	max-width:670px;
+	height:18px;
+	overflow:hidden;
+	margin-bottom:-4px;
+}

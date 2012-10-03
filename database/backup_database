@@ -1,0 +1,14 @@
+#!/bin/sh
+
+cd `dirname $0`
+
+./flush_cache
+
+hostname=`cat ../settings/website.conf | grep DB_HOSTNAME | awk -F"=" '{gsub(/^ /, "", $2); print $2}'`
+database=`cat ../settings/website.conf | grep DB_DATABASE | awk -F"=" '{gsub(/^ /, "", $2); print $2}'`
+username=`cat ../settings/website.conf | grep DB_USERNAME | awk -F"=" '{gsub(/^ /, "", $2); print $2}'`
+password=`cat ../settings/website.conf | grep DB_PASSWORD | awk -F"=" '{gsub(/^ /, "", $2); print $2}'`
+
+dow=`date +%a | tr "[:upper:]" "[:lower:]"`
+
+mysqldump -u "${username}" --password="${password}" -h "${hostname}" "${database}" | gzip > "${database}"-${dow}.sql.gz

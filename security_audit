@@ -1,0 +1,319 @@
+#!/usr/bin/php
+<?php
+	/* security_audit
+	 *
+	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
+	 * This file is part of the Banshee PHP framework
+	 * http://www.banshee-php.org/
+	 */
+
+	chdir(dirname($argv[0]));
+
+	require("libraries/banshee.php");
+
+	$written_for = "3.6";
+
+	/* Auditor class
+	 */
+	abstract class auditor {
+		protected $extension = null;
+		private $sub_directories = array(".");
+		private $current_directory = null;
+		private $dp = false;
+		protected $verified = array();
+		private $exclude = array("./public");
+
+		/* Destructor
+		 *
+		 * INPUT:  -
+		 * OUTPUT: -
+		 * ERROR:  -
+		 */
+		public function __destruct() {
+			if ($this->dp !== false) {
+				closedir($this->dp);
+			}
+		}
+
+		/* Next file
+		 *
+		 * INPUT:  -
+		 * OUTPUT: string filename
+		 * ERROR:  false
+		 */
+		protected function next_file() {
+			$file = false;
+
+			do {
+				if ($this->dp == false) {
+					if (count($this->sub_directories) == 0) {
+						return false;
+					}
+					$this->current_directory = array_shift($this->sub_directories);
+					$this->dp = opendir($this->current_directory);
+
+					continue;
+				}
+
+				if (($file = readdir($this->dp)) == false) {
+					closedir($this->dp);
+					$this->dp = false;
+					continue;
+				}
+
+				if ($file[0] == ".") {
+					$file = false;
+					continue;
+				}
+
+				$file = $this->current_directory."/".$file;
+				if (is_dir($file)) {
+					foreach ($this->exclude as $exclude) {
+						if (substr($file, 0, strlen($exclude)) == $exclude) {
+							$file = false;
+							continue 2;
+						}
+					}
+					array_push($this->sub_directories, $file);
+					$file = false;
+					continue;
+				}
+
+				$info = pathinfo($file);
+				if ($info["extension"] != $this->extension) {
+					$file = false;
+					continue;
+				}
+			} while ($file === false);
+
+			return substr($file, 2);
+		}
+
+		/* Scan file dummy function
+		 *
+		 * INPUT:  string filename
+		 * OUTPUT: -
+		 * ERROR:  -
+		 */
+		protected function scan_line($line) {
+		}
+
+		/* Perform audit
+		 *
+		 * INPUT:  -
+		 * OUTPUT: -
+		 * ERROR:  -
+		 */
+		public function perform_audit() {
+			if ($this->extension == null) {
+				print "  Extension not set!\n\n";
+				return false;
+			}
+
+			while (($file = $this->next_file()) != false) {
+				$lines = file($file);
+
+				$results = array();
+				foreach ($lines as $number => $line) {
+					$number++;
+					$line = trim($line);
+
+					if (substr($file, 0, 8) == "banshee/") {	
+						$index = substr($file, 8);
+					} else {
+						$index = $file;
+					}
+
+					if (is_array($this->verified[$index])) {
+						if (in_array($number, $this->verified[$index])) {
+							continue;
+						}
+					}
+
+					if (trim($line) == "") {
+						continue;
+					} else if (($line[0] == "#") || (substr($line, 0, 2) == "//")) {
+						continue;
+					}
+
+					ob_start();
+
+					$this->scan_line(strtolower($line), $number);
+
+					$output = ob_get_clean();
+
+					if ($output == "") {
+						continue;
+					}
+
+					$output = explode("\n", trim($output));
+					foreach ($output as $line) {
+						array_push($results, $number.": ".$line);
+					}
+				}
+
+				if (count($results) > 0) {
+					print "  ".$file.":\n";
+					foreach ($results as $line) {
+						print "    ".$line."\n";
+					}
+					print "\n";
+				}
+			}
+		}
+	}
+
+	/* Database auditing
+	 */
+	class database_auditor extends auditor {
+		protected $extension = "php";
+		private $variables = array();
+		private $continue_var = null;
+		protected $verified = array(
+			"libraries/security.php"                       => array(298),
+			"libraries/settings.php"                       => array(35),
+			"libraries/user.php"                           => array(223),
+			"libraries/database/postgresql_connection.php" => array(14),
+			"libraries/menu.php"                           => array(42),
+			"libraries/database/mssql_connection.php:"     => array(13),
+			"libraries/database/sqlite_connection.php"     => array(14),
+			"libraries/database/mssql_connection.php"      => array(13),
+			"libraries/database/mysqli_connection.php"     => array(36),
+			"libraries/database/mysql_connection.php"      => array(14),
+			"libraries/tablemanager_model.php"             => array(159),
+			"models/admin/user.php"                        => array(8));
+
+		protected function scan_line($line) {
+			/* PHP database query function calls
+			 */
+			$forbidden = array("mysql_query", "mysqli_query", "pg_query", "sqlite_query", "mssql_query");
+			foreach ($forbidden as $function) {
+				if (preg_match('/'.$function.' *\(/', $line) == 1) {
+					print $function."() detected\n";
+				}
+			}
+
+			/* Variable content continues from previous line
+			 */
+			if ($this->continue_var !== null) {
+				$this->variables[$this->continue_var] .= $line;
+
+				if (substr(rtrim($value), -1) != ".") {
+					$this->continue_var = null;
+				}
+
+				return;
+			}
+
+			/* Variable declaration
+			 */
+			if (preg_match('/^ *\$[a-z_]* *=/', $line) == 1) {
+				list($key, $value) = explode("=", $line, 2);
+				$key = substr(trim($key), 1);
+				$this->variables[$key] = $value;
+
+				if (substr(rtrim($value), -1) == ".") {
+					$this->continue_var = $key;
+				}
+
+				return;
+			}
+
+			/* Variables included in database query string
+			 */
+			$pos = false;
+			if (($pos = strpos($line, "db->query(")) !== false) {
+				$pos += 10;
+			} else if (($pos = strpos($line, "db->execute(")) !== false) {
+				$pos += 12;
+			}
+			if ($pos !== false) {
+				$str = substr($line, $pos);
+				list($str) = explode(")", $str);
+				if ($str[0] == '"') {
+					/* Query string is text
+					 */
+					list(, $str) = explode('"', $str);
+					if (ltrim($str) == ".") {
+						print "include in query string\n";
+					}
+				} else if ($str[0] == "$") {
+					/* Query string is variable
+					 */
+					list($str) = explode(",", $str);
+					$str = substr(trim($str), 1);
+					if (isset($this->variables[$str]) == false) {
+						print "unknown variable for query string: ".$str."\n";
+					} else if (strpos($this->variables[$str], "\$") !== false) {
+						print "include in query string\n";
+					}
+				} else {
+					/* weird query string
+					 */
+					print "suspicious query string\n";
+				}
+			}
+		}
+	}
+
+	/* Output auditing
+	 */
+	class output_auditor extends auditor {
+		protected $extension = "xslt";
+		protected $verified = array(
+			 "views/agenda.xslt"             => array(23, 82),
+			 "views/faq.xslt"                => array(16),
+			 "views/guestbook.xslt"          => array(16),
+			 "views/weblog.xslt"             => array(56, 78),
+			 "views/forum.xslt"              => array(68),
+			 "views/dictionary.xslt"         => array(52),
+			 "views/mailbox.xslt"            => array(34),
+			 "views/news.xslt"               => array(14),
+			 "views/includes/functions.xslt" => array(12),
+			 "views/includes/layout_pluralism.xslt" => array(53),
+			 "views/system/page.xslt"        => array(12),
+			 "views/admin/photos.xslt"       => array(29),
+			 "views/demos/googlemaps.xslt"   => array(14),
+			 "views/demos/posting.xslt"      => array(15));
+
+		protected function scan_line($line) {
+			if (strpos($line, "disable-output-escaping=\"yes\"") !== false) {
+				print "output escaping disabled\n";
+			}
+		}
+	}
+
+	/* Start security audit
+	 */
+	error_reporting(E_ALL & ~E_NOTICE);
+
+	print "Banshee Security Audit\n\n";
+	print "  Note that the findings below are not necessarily a security issue.\n";
+	print "    They only require extra attention from the auditor.\n";
+	print "  Also note that this tool does not guarantee to find all security issues.\n";
+	print "\n";
+
+	/* Check Banshee version
+	 */
+	if (defined("BANSHEE_VERSION") == false) {
+		exit("Fatal error: no Banshee installation was found.\n");
+	}
+	if (BANSHEE_VERSION != $written_for) {
+		print "==> Be advised! This script has been optimized for Banshee version ".$written_for.".\n";
+		print "    However, this website was built upon version ".BANSHEE_VERSION.".\n\n";
+	}
+
+	/* Database auditing
+	 */
+	print "Database usage audit results:\n";
+	$database = new database_auditor;
+	$database->perform_audit();
+	unset($database);
+
+	/* Output auditing
+	 */
+	print "Output escaping audit results:\n";
+	$output = new output_auditor;
+	$output->perform_audit();
+	unset($output);
+?>

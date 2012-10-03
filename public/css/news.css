@@ -1,0 +1,21 @@
+div.rsslink {
+	position:absolute;
+	top:50px;
+	right:80px;
+}
+
+ul.news {
+	margin-left:15px;
+}
+ul.news li {
+	margin:0 0 25px 0;
+	line-height:14px;
+}
+div.timestamp {
+	text-align:right;
+	font-size:10px;
+	color:#b0b0b0;
+	position:relative;
+	bottom:15px;
+	height:5px;
+}

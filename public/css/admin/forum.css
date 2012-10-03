@@ -1,0 +1,44 @@
+div.post {
+	padding-bottom:10px;
+}
+div.subject {
+	width:310px;
+	float:left;
+	overflow:hidden;
+	padding-right:20px;
+}
+div.timestamp {
+	width:200px;
+	float:left;
+}
+div.ip_address {
+	width:140px;
+	float:left;
+}
+div.subject, div.timestamp, div.action {
+	background-color:#f8f8f8;
+	border-bottom:1px solid #c0c0c0;
+	height:18px;
+}
+div.message {
+	margin-left:10px;
+}
+div.message span.author {
+	font-style:italic;
+	margin-right:3px;
+	color:#a0a0a0;
+}
+input.action {
+	border:0;
+	font-size:10px;
+	float:left;
+	margin:2px 5px 0 5px;
+	width:45px;
+}
+textarea.text {
+	width:100%;
+	height:250px;
+}
+input.button {
+	margin-right:10px;
+}

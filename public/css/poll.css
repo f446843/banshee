@@ -1,0 +1,11 @@
+div.poll ul.answers {
+	margin-left:20px;
+}
+div.poll ul.answers li {
+	margin-top:5px;
+}
+div.poll ul.answers li div.percentage {
+	height:2px;
+	border:1px solid #6060ff;
+	background-color:#a0a0ff;
+}

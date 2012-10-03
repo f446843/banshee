@@ -1,0 +1,12 @@
+input.text {
+	width:300px;
+}
+textarea.text {
+	display:block;
+	width:800px;
+	height:200px;
+	margin-bottom:10px;
+}
+input.button {
+	margin-right:15px;
+}

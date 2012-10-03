@@ -1,0 +1,33 @@
+table.list {
+	width:100%;
+}
+table.list th.filename {
+	width:300px;
+}
+table.list th.size {
+	width:100px;
+}
+table.list th.delete {
+	width:100px;
+}
+table.list input.button {
+	border:1px solid #000000;
+}
+
+fieldset.upload {
+	margin-top:25px;
+	margin-bottom:15px;
+	width:330px;
+	float:left;
+}
+
+fieldset.create {
+	margin-top:25px;
+	margin-bottom:15px;
+	width:410px;
+	float:right;
+}
+
+fieldset.create input.text {
+	width:250px;
+}

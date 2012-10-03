@@ -1,0 +1,19 @@
+table.list {
+	width:100%;
+	margin-bottom:15px;
+}
+table.list th.author {
+	width:150px;
+}
+table.list th.timestamp {
+	width:160px;
+}
+table.list th.ip_address {
+	width:100px;
+}
+table.list th.delete {
+	width:100px;
+}
+table.list input.button {
+	border:1px solid #000000;
+}

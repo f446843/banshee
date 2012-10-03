@@ -1,0 +1,11 @@
+div.gsc-control {
+	width:100%;
+}
+
+div.gs-visibleUrl-short {
+	display:none;
+}
+
+div.content .gs-webResult div.gs-visibleUrl-long {
+	display:inline;
+}

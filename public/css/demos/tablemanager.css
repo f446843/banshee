@@ -1,0 +1,15 @@
+table.list {
+	width:100%;
+}
+table.list th.number {
+	width:100px;
+}
+table.list th.boolean {
+	width:100px;
+}
+table.list th.timestamp {
+	width:150px;
+}
+table.tablemanager select.text {
+	width:150px;
+}

@@ -1,0 +1,190 @@
+@import url(/css/includes/banshee.css);
+
+@font-face {
+	font-family:Questrial;
+	src:url(/fonts/Questrial-Regular.ttf);
+}
+
+* {
+	margin:0;
+	padding:0;
+}
+
+body {
+	background:#f6f6f6 url(/images/layout/pluralism_title_side.jpg) repeat-x;
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size:12px;
+	color:#6b6b6b;
+}
+
+h1, h2, h3, h4 {
+	margin:0;
+}
+
+h2, h3, h4 {
+	margin-top:15px;
+	border-bottom:1px solid #f2f2f2;
+	letter-spacing:-0.035em;
+	font-weight:normal;
+	color:#606060;
+}
+
+h1 {
+	margin-bottom:10px;
+}
+
+h2 {
+	font-size:18px;
+}
+
+h3 {
+	font-size:16px;
+	font-weight:bold;
+}
+
+h4 {
+	font-size:14px;
+	font-weight:bold;
+}
+
+td {
+	vertical-align:top;
+}
+
+p, ul, ol {
+	margin-bottom:1.5em;
+	line-height:170%;
+	text-align:justify;
+}
+
+ul, ol {
+	margin-left:3em;
+}
+
+a {
+	color:#ff5a00;
+	text-decoration:none;
+}
+
+a:hover {
+	text-decoration:underline;
+}
+
+a img {
+	border:none;
+}
+
+img.title_icon {
+	float:right;
+	width:45px;
+	margin-bottom:5px;
+}
+
+img.left {
+	float:left;
+	margin:5px 20px 0 0;
+}
+
+img.right {
+	float:right;
+	margin:5px 0 0 20px;
+}
+
+/* Wrapper
+ */
+div.wrapper {
+	width:960px;
+	margin:0 auto;
+	background:url(/images/layout/pluralism_body_side.jpg) repeat-y;
+}
+
+/* Header
+ */
+div.header {
+	height:140px;
+	background:#087fe7 url(/images/layout/pluralism_title_bg.jpg) no-repeat;
+}
+
+/* Title
+ */
+div.header div.title {
+	float:left;
+	margin:0;
+	padding:90px 0 0 78px;
+	letter-spacing:-2px;
+	font-size:40px;
+	color:#ffffff;
+	font-family:Questrial, "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+
+/* Menu
+ */
+div.menu {
+	float:right;
+}
+
+div.menu ul {
+	margin:0;
+	padding:112px 78px 0 0;
+	list-style:none;
+	line-height:normal;
+}
+
+div.menu li {
+	display:inline;
+	padding-left:40px;
+}
+
+div.menu a {
+	text-decoration:none;
+	font-size:13px;
+	font-weight:bold;
+	color:#ffffff;
+}
+
+div.menu a:hover {
+	text-decoration:underline;
+}
+
+/* Page
+ */
+div.page {
+	background:url(/images/layout/pluralism_body_top.jpg) no-repeat;
+	padding:40px 80px 20px 80px;
+	min-height:350px;
+	position:relative;
+}
+
+div.page div.sidebar {
+	float:right;
+	width:150px;
+	min-height:350px;
+	padding-left:50px;
+
+}
+
+div.page div.sidebar h3 {
+	margin-top:0;
+}
+
+/* Footer
+ */
+div.footer {
+	height:50px;
+	background:url(/images/layout/pluralism_body_bottom.jpg) no-repeat;
+	text-align:center;
+	padding-top:30px;
+	color:#8e8e8e;
+}
+
+div.footer span:before {
+	content:"-";
+	margin:0 7px;
+}
+div.footer span:first-child:before {
+	content:"";
+}
+
+div.footer a {
+	color:#666666;
+}

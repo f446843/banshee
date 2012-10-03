@@ -1,0 +1,32 @@
+/* Overview
+ */
+table.list {
+	margin-bottom:15px;
+}
+
+ul.pagination, ul.alphabetize {
+	margin-top:-5px;
+	margin-bottom:5px;
+}
+
+/* Edit
+ */
+table.tablemanager {
+	margin-bottom:15px;
+}
+table.tablemanager input.other {
+	width:300px;
+}
+table.tablemanager input.datetime {
+	width:140px;
+}
+table.tablemanager select.text {
+	min-width:200px;
+}
+table.tablemanager textarea.text {
+	width:500px;
+	height:150px;
+}
+input.button {
+	margin-right:10px;
+}
