@@ -18,7 +18,7 @@ Use the directory 'public' as the webroot directory and allow PHP execution. If 
 
 For Apache, there is a .htaccess file in the 'public' directory which contains the URL rewriting rules.
 
-CONFIGURE PHP
+Configure PHP
 -------------
 Banshee needs PHP's MySQL and XSL module. Use the following PHP settings:
 
