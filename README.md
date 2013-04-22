@@ -7,14 +7,14 @@ Configure your webserver
 ------------------------
 Use the directory 'public' as the webroot directory and allow PHP execution. If you use the Hiawatha webserver, you can use the following UrlToolkit configuration:
 
-UrlToolkit {
-	ToolkitID = banshee
-	RequestURI isfile Return
-	Match ^/(css|files|images|js)($|/) Return
-	Match ^/(favicon.ico|robots.txt)$ Return
-	Match .*\?(.*) Rewrite /index.php?$1
-	Match .* Rewrite /index.php
-}
+	UrlToolkit {
+		ToolkitID = banshee
+		RequestURI isfile Return
+		Match ^/(css|files|images|js)($|/) Return
+		Match ^/(favicon.ico|robots.txt)$ Return
+		Match .*\?(.*) Rewrite /index.php?$1
+		Match .* Rewrite /index.php
+	}
 
 For Apache, there is a .htaccess file in the 'public' directory which contains the URL rewriting rules.
 
