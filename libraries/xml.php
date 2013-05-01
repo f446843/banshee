@@ -46,6 +46,17 @@
 			return null;
 		}
 
+		/* Clear XML data buffer
+		 *
+		 * INPUT:  -
+		 * OUTPUT: -
+		 * ERROR:  -
+		 */
+		public function clear_buffer() {
+			$this->xml_data = "";
+			$this->abort_caching();
+		}
+
 		/* Translate special characters in string to XML entities
 		 *
 		 * INPUT:  string data
@@ -123,22 +134,35 @@
 
 		/* Add record to buffer
 		 *
-		 * INPUT:  array( string key => string value[, ...] ), string tag name, array( string key => string value[, ...] )
+		 * INPUT:  array( string key => string value[, ...] )[, string tag name][, array( string key => string value[, ...] )][, boolean recursive]
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function record($record, $name = null, $attributes = array()) {
+		public function record($record, $name = null, $attributes = array(), $recursive = false) {
 			if ($name !== null) {
 				if (isset($record["id"])) {
 					$attributes["id"] = $record["id"];
 				}
+
+				if (is_numeric($name)) {
+					$name = "item";
+				}
 				$this->open_tag($name, $attributes);
 			}
 
-			$skip_tags = array("id", "password");
+			$skip_tags = array("id", "password", "creditcard");
 			foreach (array_keys($record) as $key) {
-				if ((in_array($key, $skip_tags) == false) && (is_array($record[$key]) == false)) {
+				if (in_array($key, $skip_tags, true)) {
+					continue;
+				}
+				
+				if (is_array($record[$key]) == false) {
+					if (is_numeric($key)) {
+						$key = "item";
+					}
 					$this->add_tag($key, $record[$key]);
+				} else if ($recursive) {
+					$this->record($record[$key], $key, array(), true);
 				}
 			}
 			if ($name !== null) {
@@ -148,7 +172,7 @@
 
 		/* Add XML data to buffer
 		 *
-		 * INPUT:  XML data, string tat name
+		 * INPUT:  XML data, string tag name
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
@@ -281,7 +305,7 @@
 			return true;
 		}
 
-		/* Stop caching
+		/* Stop XML caching
 		 *
 		 * INPUT:  -
 		 * OUTPUT: true

@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../includes/banshee.xslt" />
+<xsl:include href="../banshee/main.xslt" />
 
 <!--
 //
@@ -32,8 +32,13 @@
 </xsl:for-each>
 </table>
 
-<input type="button" value="New page" class="button" onClick="javascript:document.location='/admin/page/new'" />
-<input type="button" value="Back" class="button" onClick="javascript:document.location='/admin'" />
+<a href="/admin/page/new" class="button">New page</a>
+<a href="/admin" class="button">Back</a>
+<xsl:if test="@hiawatha='yes'">
+<form action="/{/output/page}" method="post" class="clear">
+<input type="submit" name="submit_button" value="Clear Hiawatha cache" class="button" onClick="javascript:return confirm('CLEAR: Are you sure?')" />
+</form>
+</xsl:if>
 </xsl:template>
 
 <!--
@@ -110,7 +115,7 @@
 <textarea id="editor" name="content" class="text content"><xsl:value-of select="page/content" /></textarea>
 
 <input type="submit" name="submit_button" value="Save page" class="button" />
-<input type="button" value="Cancel" class="button" onClick="javascript:document.location='/admin/page'" />
+<a href="/admin/page" class="button">Cancel</a>
 <xsl:if test="page/@id">
 <input type="submit" name="submit_button" value="Delete page" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>

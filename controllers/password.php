@@ -1,9 +1,9 @@
 <?php
 	class password_controller extends controller {
 		private function show_password_form($key) {
-			$this->output->add_javascript(PASSWORD_HASH.".js");
+			$this->output->add_javascript("banshee/".PASSWORD_HASH.".js");
 			$this->output->add_javascript("password.js");
-			$this->output->onload_javascript("hash = window['".PASSWORD_HASH."'];");
+			$this->output->run_javascript("hash = window['".PASSWORD_HASH."'];");
 
 			$this->output->open_tag("reset");
 			$this->output->add_tag("key", $key);

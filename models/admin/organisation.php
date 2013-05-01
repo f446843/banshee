@@ -21,8 +21,8 @@
 			}
 
 			$query = "select count(*) as count from users where organisation_id=%d";
-			
-			if (($result = $this->db->execute($query, $item_id)) === false) {	
+
+			if (($result = $this->db->execute($query, $item_id)) === false) {
 				$this->output->add_message("Database error.");
 				return false;
 			}

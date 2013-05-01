@@ -1,5 +1,4 @@
-$(function() {
-	$('#gallery a').slimbox({
-		overlayOpacity:0.8
-	});
+$(document).ready(function(){
+	$("#gallery a").prop("rel", "prettyPhoto[gallery]");
+	$("#gallery a").prettyPhoto({ social_tools:"" });
 });

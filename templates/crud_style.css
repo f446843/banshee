@@ -1,0 +1,16 @@
+table.list {
+	width:100%;
+	margin-bottom:15px;
+}
+
+table.edit {
+	margin-bottom:15px;
+}
+
+table.edit td:first-child {
+	width:100px;
+}
+
+input.button, a.button {
+	margin-right:10px;
+}

@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="includes/banshee.xslt" />
+<xsl:include href="banshee/main.xslt" />
 
 <!--
 //
@@ -34,7 +34,7 @@
 <p>Number of votes: <xsl:value-of select="answers/@votes" /></p>
 </div>
 
-<input type="button" value="Back" class="button" onClick="javascript:document.location='/{/output/page}'" />
+<a href="/{/output/page}" class="button">Back</a>
 </xsl:template>
 
 <!--

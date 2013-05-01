@@ -37,7 +37,7 @@
 				$this->char = $this->make_valid_char($_GET["char"]);
 			}
 
-			$this->output->add_css("includes/alphabetize.css");
+			$this->output->add_css("banshee/alphabetize.css");
 		}
 
 		/* Magic method get

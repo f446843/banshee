@@ -1,11 +1,31 @@
-div.gsc-control {
-	width:100%;
+input.query {
+	width:650px;
+	height:20px;
 }
 
-div.gs-visibleUrl-short {
-	display:none;
+div.sections {
+	margin-top:5px;
 }
 
-div.content .gs-webResult div.gs-visibleUrl-long {
-	display:inline;
+div.sections span {
+	margin-right:10px;
+}
+div.sections span input {
+	margin-right:5px;
+	position:relative;
+	top:1px;
+}
+
+ul.pagination {
+	list-style:none;
+	margin-left:0;
+}
+
+div.preview {
+	margin-left:15px;
+}
+
+div.error {
+	color:#ff0000;
+	margin-top:10px;
 }

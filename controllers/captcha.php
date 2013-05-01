@@ -1,6 +1,4 @@
 <?php
-	require("../libraries/captcha.php");
-
 	class captcha_controller extends controller {
 		public function execute() {
 			$captcha = new captcha;
@@ -9,8 +7,7 @@
 			}
 
 			$captcha->to_output();
-
-			$this->output->disabled = true;
+			$this->output->disable();
 		}
 	}
 ?>

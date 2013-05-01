@@ -108,15 +108,31 @@
 			}
 
 			$this->resource = $resource;
-			$this->width = imagesx($resource);
-			$this->height = imagesy($resource);
+			$this->update_size();
+
+			return true;
+		}
+
+		/* Update image size information
+		 *
+		 * INPUT:  -
+		 * OUTPUT: true
+		 * ERROR:  false
+		 */
+		public function update_size() {
+			if ($this->resource === null) {
+				return false;
+			}
+
+			$this->width = imagesx($this->resource);
+			$this->height = imagesy($this->resource);
 
 			return true;
 		}
 
 		/* Resize image
 		 *
-		 * INPUT:  int new height[, int new width]
+		 * INPUT:  int new height[, int max new width]
 		 * OUTPUT: true
 		 * ERROR:  false
 		 */
@@ -143,22 +159,23 @@
 
 			imagedestroy($this->resource);
 			$this->resource = $resource;
-			$this->width = imagesx($resource);
-			$this->height = imagesy($resource);
+			$this->update_size();
 
 			return true;
 		}
 
 		/* Send image to client
 		 *
-		 * INPUT:  -
+		 * INPUT:  object output
 		 * OUTPUT: true
 		 * ERROR:  false
 		 */
-		public function to_output() {
+		public function to_output($output) {
 			if (headers_sent()) {
 				return false;
 			}
+
+			$output->disable();
 
 			header("Content-Type: ".$this->mime_type);
 			return call_user_func($this->save_image, $this->resource);

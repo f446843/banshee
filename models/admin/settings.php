@@ -31,7 +31,7 @@
 			foreach ($types as $type) {
 				$this->elements["type"]["options"][$type] = $type;
 			}
-			
+
 			if ($this->settings->secret_website_code != "CHANGE_ME_INTO_A_RANDOM_STRING") {
 				array_push($this->hidden_keys, "secret_website_code");
 			}
@@ -42,9 +42,9 @@
 			$args = array($this->table);
 
 			if (count($this->hidden_keys) > 0) {
-				$query .= "where %S not in (".
+				$query .= " where %S not in (".
 				          implode(", ", array_fill(1, count($this->hidden_keys), "%s")).
-				          ") ";
+				          ")";
 				array_push($args, "key", $this->hidden_keys);
 			}
 
@@ -55,24 +55,20 @@
 			return $result[0]["count"];
 		}
 
-		public function get_items($offset, $count) {
-			$query = "select * from %S ";
+		public function get_items() {
+			list($offset, $count) = func_get_args();
+
+			$query = "select * from %S";
 			$args = array($this->table);
 
 			if (count($this->hidden_keys) > 0) {
-				$query .= "where %S not in (".
+				$query .= " where %S not in (".
 				          implode(", ", array_fill(0, count($this->hidden_keys), "%s")).
-				          ") ";
+				          ")";
 				array_push($args, "key", $this->hidden_keys);
 			}
 
-			if (is_array($this->order) == false) {
-				$order = "%S";
-			} else {
-				$order = implode(", ", array_fill(0, count($this->order), "%S"));
-			}
-			$query .= "order by ".$order." limit %d,%d";
-
+			$query .= " order by %S limit %d,%d";
 			array_push($args, $this->order, $offset, $count);
 
 			return $this->db->execute($query, $args);

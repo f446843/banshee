@@ -9,7 +9,7 @@
 
 	chdir(dirname($argv[0]));
 	require("libraries/banshee.php");
-	require("helpers/console.php");
+	require("libraries/helpers/console.php");
 
 	function show_directory_content($directory) {
 		$result = array();
@@ -17,6 +17,8 @@
 		if (($dp = opendir($directory)) !== false) {
 			while (($file = readdir($dp)) !== false) {
 				if ($file[0] == ".") {
+					continue;
+				} else if ($file == "helpers") {
 					continue;
 				}
 
@@ -69,7 +71,7 @@
 
 		return;
 	}
-	
+
 	$directories = array("libraries", "libraries/database");
 	foreach ($directories as $directory) {
 		if (($fp = @fopen($directory."/".$argv[1], "r")) === false) {
@@ -117,7 +119,7 @@
 			} else if ($in_set) {
 				$properties[$property] .= "w";
 			}
-		} else if (preg_match("/^\t(abstract )?class /", $line) == 1) {
+		} else if (preg_match("/^\t(abstract |final )?class /", $line) == 1) {
 			print trim($line)."\n";
 			$in_class = true;
 			$properties = array();
@@ -137,6 +139,6 @@
 			}
 		}
 	}
-	
+
 	fclose($fp);
 ?>

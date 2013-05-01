@@ -1,0 +1,17 @@
+div.messages {
+	margin:10px 0;
+}
+
+div.buttons {
+	margin-top:15px;
+}
+div.buttons div.submit {
+	float:left;
+}
+div.buttons a.button,
+div.buttons input.button {
+	margin-right:10px;
+}
+div.buttons input.submit {
+	font-weight:bold;
+}

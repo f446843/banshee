@@ -112,6 +112,20 @@
 			list($red, $green, $blue) = $result;
 		}
 
+		/* Validate captcha code
+		 *
+		 * INPUT:  string captcha code
+		 * OUTPUT: boolean captcha code valid
+		 * ERROR:  -
+		 */
+		public static function valid_code($code) {
+			if (isset($_SESSION["captcha_code"]) == false) {
+				return false;
+			}
+
+			return $_SESSION["captcha_code"] === $code;
+		}
+
 		/* Send captcha image to client
 		 *
 		 * INPUT:  -
@@ -125,7 +139,7 @@
 
 			header("Content-Type: image/png");
 			header("Expires: ".gmdate("D, d M Y H:i:s")." GMT");
-			header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT"); 
+			header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
 			header("Cache-Control: no-store, no-cache, must-revalidate");
 			header("Cache-Control: post-check=0, pre-check=0", false);
 			header("Pragma: no-cache");

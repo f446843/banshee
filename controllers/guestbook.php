@@ -13,9 +13,6 @@
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				if ($this->model->message_oke($_POST) == false) {
 					$this->show_guestbook_form($_POST);
-				} else if (message_is_spam($_POST["message"])) {
-					$this->output->add_message("Message seen as spam.");
-					$this->show_guestbook_form($_POST);
 				} else if ($this->model->save_message($_POST) == false) {
 					$this->output->add_message("Database errors while saving message.");
 					$this->show_guestbook_form($_POST);
@@ -38,7 +35,8 @@
 
 				foreach ($guestbook as $item) {
 					$item["timestamp"] = date("j F Y, H:i", $item["timestamp"]);
-					$item["message"] = unescaped_output($item["message"]);
+					$message = new message($item["message"]);
+					$item["message"] = $message->unescaped_output();
 					unset($item["ip_address"]);
 					$this->output->record($item, "item");
 				}

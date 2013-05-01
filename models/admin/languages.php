@@ -45,7 +45,7 @@
 		public function save_oke($item) {
 			$result = parent::save_oke($item);
 
-			if (valid_input($item["name"], VALIDATE_LETTERS."_", VALIDATE_NONEMPTY) == false) {	
+			if (valid_input($item["name"], VALIDATE_LETTERS."_", VALIDATE_NONEMPTY) == false) {
 				$this->output->add_message("Invalid name");
 				$result = false;
 			}
@@ -61,7 +61,7 @@
 
 		public function delete_item($item_id) {
 			$this->output->remove_from_cache("language");
-			
+
 			return parent::delete_item($item_id);
 		}
 	}

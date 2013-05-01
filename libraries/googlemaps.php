@@ -37,7 +37,7 @@
 
 		/* Magic method get
 		 *
-		 * INPUT:  string key 
+		 * INPUT:  string key
 		 * OUTPUT: mixed value
 		 * ERROR:  null
 		 */
@@ -53,7 +53,7 @@
 
 		/* Magic method set
 		 *
-		 * INPUT:  string key 
+		 * INPUT:  string key
 		 * OUTPUT: mixed value
 		 * ERROR:  null
 		 */

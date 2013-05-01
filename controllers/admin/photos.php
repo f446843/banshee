@@ -41,9 +41,9 @@
 			/* Work-around for the most fucking annoying crap browser in the world: IE
 			 */
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
-				foreach ($_FILES as &$file) {
+				foreach ($_FILES as $i => $file) {
 					if ($file["type"] == "image/pjpeg") {
-						$file["type"] = "image/jpeg";
+						$files[$i]["type"] = "image/jpeg";
 					}
 				}
 

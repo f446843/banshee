@@ -16,19 +16,11 @@
 
 	/* Abort on dangerous PHP settings
 	 */
-	check_PHP_setting("register_globals", 0);
 	check_PHP_setting("allow_url_include", 0);
+	check_PHP_setting("magic_quotes_gpc", 0);
+	check_PHP_setting("register_globals", 0);
 
-	/* Undo magic quotes
-	 */
-	if (ini_get("magic_quotes_gpc") == 1) {
-		$superglobals = array(&$_REQUEST, &$_GET, &$_POST, &$_COOKIE);
-		foreach ($superglobals as &$superglobal) {
-			$superglobal = remove_magic_quotes($superglobal);
-		}
-	}
-
-	/* Load core modules
+	/* Create core objects
 	 */
 	$_database = new MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
 	$_session  = new session($_database);
@@ -43,7 +35,7 @@
 	/* Logging
 	 */
 	if (library_exists("logging") && ($_user->is_admin == false)) {
-		$logging = new logging($_database, $_page, $_settings);
+		$logging = new logging($_database, $_page);
 		$logging->execute();
 	}
 
@@ -64,9 +56,9 @@
 		include($file);
 	}
 
-	$_output->open_tag("output", array("url" => $_page->url));
+	if ($_output->add_layout_data) {
+		$_output->open_tag("output", array("url" => $_page->url));
 
-	if ($_page->ajax_request == false) {
 		$_output->add_tag("banshee_version", BANSHEE_VERSION);
 		$_output->add_tag("website_url", $_SERVER["SERVER_NAME"]);
 
@@ -104,18 +96,22 @@
 			} else if ($_output->fetch_from_cache("menu") == false) {
 				/* Normal menu
 				 */
-				$_output->start_caching("menu");
 				$menu = new menu($_database, $_output);
-				$menu->to_output(0);
-				$_output->stop_caching();
+				if (is_true(MENU_CHECK_RIGHTS)) {
+					$menu->set_user($_user);
+				}
+				$menu->to_output();
 			}
 		}
 
 		/* Stylesheet
 		 */
+		$_output->add_css("banshee/banshee.css");
 		$_output->add_css($_page->module.".css");
 
-		$_output->open_tag("content");
+		$_output->open_tag("content", array("mobile" => show_boolean($_output->mobile)));
+	} else {
+		$_output->open_tag("output");
 	}
 
 	/* Include the controller
@@ -143,30 +139,36 @@
 				$_controller->$method();
 			}
 			unset($_controller);
+
+			if ($_output->disabled) {
+				print ob_get_clean();
+				exit;
+			}
 		}
 	}
 
-	if ($_page->ajax_request == false) {
+	if ($_output->add_layout_data) {
 		$_output->close_tag();
 	}
 
-	/* Errors
+	/* Handle errors
 	 */
-	$errors = ob_get_clean();
+	$errors = ob_get_contents();
+	ob_clean();
 
 	if ($errors != "") {
-		$error_handler = new website_error_handler($_output, $_settings);
+		$error_handler = new website_error_handler($_output, $_settings, $_user);
 		$error_handler->execute($errors);
 		unset($error_handler);
 	}
 
 	/* Close output
 	 */
-	ob_start();
 	$_output->close_tag();
-	ob_end_clean();
 
 	/* Output content
 	 */
-	$_output->generate();
+	$output = $_output->generate();
+	$last_errors = ob_get_clean();
+	print $output;
 ?>

@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../includes/banshee.xslt" />
-<xsl:include href="../includes/pagination.xslt" />
+<xsl:include href="../banshee/main.xslt" />
+<xsl:include href="../banshee/pagination.xslt" />
 
 <!--
 //
@@ -20,8 +20,8 @@
 </table>
 <xsl:apply-templates select="pagination" />
 
-<input type="button" value="New word" onClick="javascript:document.location='/admin/dictionary/new'" class="button" />
-<input type="button" value="Cancel" onClick="javascript:document.location='/admin'" class="button" />
+<a href="/admin/dictionary/new" class="button">New word</a>
+<a href="/admin" class="button">Back</a>
 </xsl:template>
 
 <!--
@@ -42,7 +42,7 @@
 </table>
 
 <input type="submit" name="submit_button" value="Save word" class="button" />
-<input type="button" value="Cancel" onClick="javascript:document.location='/admin/dictionary'" class="button" />
+<a href="/admin/dictionary" class="button">Cancel</a>
 <xsl:if test="@id">
 <input type="submit" name="submit_button" value="Delete word" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>

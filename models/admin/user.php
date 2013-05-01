@@ -88,7 +88,7 @@
 			if (in_array(ADMIN_ROLE_ID, $user["roles"])) {
 				return false;
 			}
-			
+
 			if ($user["organisation_id"] != $this->user->organisation_id) {
 				return false;
 			}
@@ -159,6 +159,13 @@
 				}
 			}
 
+			/* Check certificate serial
+			 */
+			if (valid_input($user["cert_serial"], VALIDATE_NUMBERS) == false) {
+				$this->output->add_message("The certificate serial must be a number.");
+				$result = false;
+			}
+
 			return $result;
 		}
 
@@ -212,7 +219,7 @@
 		}
 
 		public function update_user($user) {
-			$keys = array("username", "fullname", "email");
+			$keys = array("username", "fullname", "email", "cert_serial");
 			if ($user["password"] != "") {
 				array_push($keys, "password");
 			}
@@ -228,6 +235,10 @@
 				return false;
 			} else if (in_array(ADMIN_ROLE_ID, $current["roles"]) && (in_array(ADMIN_ROLE_ID, $user["roles"]) == false)) {
 				array_unshift($user["roles"], ADMIN_ROLE_ID);
+			}
+
+			if ($user["cert_serial"] == "") {
+				$user["cert_serial"] = null;
 			}
 
 			if ($this->db->query("begin") == false) {
@@ -300,54 +311,28 @@
 		}
 
 		public function delete_user($user_id) {
-			if ($this->db->query("begin") === false) {
-				return false;
-			}
+			$queries = array();
 
 			/* Forum last view
 			 */
 			if ($this->table_exists("forum_last_view")) {
-				if ($this->db->query("delete from forum_last_view where user_id=%d", $user_id) === false) {
-					$this->db->query("rollback");
-					return false;
-				}
+				array_push($queries, array("delete from forum_last_view where user_id=%d", $user_id));
 			}
 
 			/* Forum messages
 			 */
 			if ($this->table_exists("forum_messages")) {
-				if (($user = $this->db->entry("users", $user_id)) === false) {
-					$this->db->query("rollback");
-					return false;
-				}
-
-				$query = "update forum_messages set user_id=null, username=%s where user_id=%d";
-				if ($this->db->execute($query, $user["fullname"], $user_id) === false) {
-					$this->db->query("rollback");
-					return false;
-				}
+				$query = "update forum_messages set user_id=null, username=".
+				         "(select fullname from users where id=%d limit 1) where user_id=%d";
+				array_push($queries, array($query, $user_id, $user_id));
 			}
 
-			/* Sessions
-			 */
-			if ($this->db->query("delete from sessions where user_id=%d", $user_id) === false) {
-				$this->db->query("rollback");
-				return false;
-			}
+			array_push($queries,
+				array("delete from sessions where user_id=%d", $user_id),
+				array("delete from user_role where user_id=%d", $user_id),
+				array("delete from users where id=%d", $user_id));
 
-			/* Roles
-			 */
-			if ($this->db->query("delete from user_role where user_id=%d", $user_id) === false) {
-				$this->db->query("rollback");
-				return false;
-			}
-
-			if ($this->db->query("delete from users where id=%d", $user_id) === false) {
-				$this->db->query("rollback");
-				return false;
-			}
-
-			return $this->db->query("commit") !== false;
+			return $this->db->transaction($queries) !== false;
 		}
 
 		public function send_notification($user) {

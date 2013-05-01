@@ -1,5 +1,3 @@
-@import url(/css/includes/grippie.css);
-
 /* Forums
  */
 div.forums {
@@ -73,6 +71,8 @@ div.topic div.message div.date {
 	border-bottom:1px solid #c0c0c0;
 	background-color:#f8f8f8;
 	margin:0 0 5px -10px;
+	height:18px;
+	overflow:hidden;
 }
 div.topic div.message div.author {
 	float:left;
@@ -122,8 +122,8 @@ form.new_response textarea.text {
 	height:100px;
 }
 
-input.button {
-	margin-right:5px;
+a.button, input.button {
+	margin:15px 10px 0 0 ;
 }
 
 /* Smilies

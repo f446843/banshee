@@ -13,7 +13,7 @@
 			$pdf->Link(10, 30, 40, 10, "/demos");
 			$pdf->Output();
 
-			$this->output->disabled = true;
+			$this->output->disable();
 		}
 	}
 ?>

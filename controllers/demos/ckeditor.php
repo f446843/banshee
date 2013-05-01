@@ -9,8 +9,8 @@
 				$this->output->close_tag();
 			} else {
 				$this->output->add_javascript("ckeditor/ckeditor.js");
-				$this->output->add_javascript("demos/ckeditor.js");
-				$this->output->onload_javascript("start_ckeditor()");
+				$this->output->add_javascript("banshee/start_ckeditor.js");
+				$this->output->run_javascript("start_ckeditor()");
 
 				$this->output->add_tag("edit");
 			}

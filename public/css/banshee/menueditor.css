@@ -1,0 +1,32 @@
+ul.menu-editor {
+	cursor:pointer;
+}
+
+ul.menu-editor span.label {
+	margin-right:2px;
+}
+
+ul.menu-editor span.link {
+	margin-left:10px;
+}
+
+form > ul.menu-editor {
+	list-style:none;
+	padding:0;
+}
+
+ul.menu-editor ul.sortable {
+	list-style:none;
+	padding:0 0 0 30px;
+}
+
+ul.menu-editor li {
+	margin-top:2px;
+}
+
+ul.menu-editor input.button {
+	padding:0;
+	height:19px;
+	width:25px;
+	margin:0 0 0 2px;
+}

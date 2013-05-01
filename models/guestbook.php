@@ -1,6 +1,4 @@
 <?php
-	require_once("../helpers/anti_spam.php");
-
 	class guestbook_model extends model {
 		public function count_messages() {
 			$query = "select count(*) as count from guestbook";
@@ -26,9 +24,16 @@
 				$this->output->add_message("Please, fill in your name.");
 				$result = false;
 			}
+
 			if (trim($message["message"]) == "") {
 				$this->output->add_message("Please, leave a message.");
 				$result = false;
+			} else {
+				$post = new message($message["message"]);
+				if ($post->is_spam) {
+					$this->output->add_message("Message seen as spam.");
+					$result = false;
+				}
 			}
 
 			return $result;

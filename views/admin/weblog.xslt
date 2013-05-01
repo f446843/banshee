@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../includes/banshee.xslt" />
-<xsl:include href="../includes/pagination.xslt" />
+<xsl:include href="../banshee/main.xslt" />
+<xsl:include href="../banshee/pagination.xslt" />
 
 <!--
 //
@@ -10,29 +10,25 @@
 //-->
 <xsl:template match="overview">
 <table class="list">
-<thead>
-	<tr><th class="content">Title</th>
-	<xsl:if test="/output/user/@admin='yes'">
-	<th class="author">Author</th>
-	</xsl:if>
-	<th class="timestamp">Timestamp</th></tr>
-</thead>
-<tbody>
-	<xsl:for-each select="weblogs/weblog">
-	<tr class="click" onClick="javascript:document.location='/admin/weblog/{@id}'">
-	<td><xsl:value-of select="title" /></td>
-	<xsl:if test="/output/user/@admin='yes'">
-	<td><xsl:value-of select="author" /></td>
-	</xsl:if>
-	<td><xsl:value-of select="timestamp" /></td>
-	</tr>
-	</xsl:for-each>
-</tbody>
+<tr><th class="content">Title</th>
+<xsl:if test="/output/user/@admin='yes'">
+<th class="author">Author</th>
+</xsl:if>
+<th class="timestamp">Timestamp</th></tr>
+<xsl:for-each select="weblogs/weblog">
+<tr class="click" onClick="javascript:document.location='/admin/weblog/{@id}'">
+<td><xsl:value-of select="title" /></td>
+<xsl:if test="/output/user/@admin='yes'">
+<td><xsl:value-of select="author" /></td>
+</xsl:if>
+<td><xsl:value-of select="timestamp" /></td>
+</tr>
+</xsl:for-each>
 </table>
 <xsl:apply-templates select="pagination" />
 
-<input type="button" value="New weblog" onClick="document.location='/admin/weblog/new'" class="button" />
-<input type="button" value="Back" onClick="document.location='/admin'" class="button" />
+<a href="/admin/weblog/new" class="button">New weblog</a>
+<a href="/admin" class="button">Back</a>
 </xsl:template>
 
 <!--
@@ -70,7 +66,7 @@ Title: <input type="text" name="title" value="{weblog/title}" class="text" />
 
 <!-- Buttons -->
 <input type="submit" name="submit_button" value="Save weblog" class="button" />
-<input type="button" value="Cancel" onClick="document.location='/admin/weblog'" class="button" />
+<a href="/admin/weblog" class="button">Cancel</a>
 <xsl:if test="weblog/@id">
 <input type="submit" name="submit_button" value="Delete weblog" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>

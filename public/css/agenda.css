@@ -66,14 +66,16 @@ div.appointment {
 div.buttons {
 	float:right;
 }
-div.buttons input.button {
+div.buttons a.button {
 	float:left;
 	border:1px solid #404040;
 	margin-right:0;
 	margin-left:10px;
 	font-size:10px;
+	border-radius:0;
+	padding:0 30px;
 }
-div.buttons input.button:hover {
+div.buttons a.button:hover {
 	background-color:#fff0d0;
 }
 h5 {

@@ -1,6 +1,6 @@
 <?php
 	class admin_file_model extends model {
-		public function filename_oke($file) {	
+		public function filename_oke($file) {
 			if (trim($file) == "") {
 				return false;
 			}
@@ -82,7 +82,7 @@
 		}
 
 		public function delete_file($file, $directory) {
-			if ($this->filename_oke($file) == false) {	
+			if ($this->filename_oke($file) == false) {
 				return false;
 			}
 			$file = $directory."/".$file;

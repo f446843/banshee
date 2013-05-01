@@ -16,7 +16,7 @@
 
 			$google_map->show_static_map(640, 350);
 
-			$this->output->disabled = true;
+			$this->output->disable();
 		}
 
 		public function execute() {

@@ -1,7 +1,4 @@
 <?php
-	require_once("../helpers/anti_spam.php");
-	require_once("../helpers/smilies.php");
-
 	class weblog_model extends model {
 		private $show_user = null;
 
@@ -143,12 +140,16 @@
 				$this->output->add_message("Please, fill in your name.");
 				$result = false;
 			}
+
 			if (trim($comment["content"]) == "") {
 				$this->output->add_message("Please, enter your message.");
 				$result = false;
-			} else if (message_is_spam($comment["content"])) {
-				$this->output->add_message("Message seen as spam.");
-				$result = false;
+			} else {
+				$message = new message($comment["content"]);
+				if ($message->is_spam) {
+					$this->output->add_message("Message seen as spam.");
+					$result = false;
+				}
 			}
 
 			return $result;

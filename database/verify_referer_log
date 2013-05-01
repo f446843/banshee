@@ -1,0 +1,89 @@
+#!/usr/bin/php
+<?php
+	chdir(dirname($argv[0]));
+	require("../libraries/banshee.php");
+	require("../libraries/helpers/http.php");
+
+	class verify_referer_log {
+		private $db = null;
+
+		/* Constructor
+		 */
+		public function __construct($db) {
+			$this->db = $db;
+		}
+
+		/* Delete a referer log
+		 */
+		private function delete_referer_log($referer) {
+			$query = "delete from log_referers where url=%s";
+			$this->db->query($query, $referer["url"]);
+		}
+
+		/* Approve a referer log
+		 */
+		private function approve_referer_log($referer) {
+			$query = "update log_referers set verified=%d where url=%s";
+			$this->db->query($query, 1, $referer["url"]);
+		}
+
+		/* Verify referer logs
+		 */
+		public function execute() {
+			/* Fetch referer logs
+			 */
+			$query = "select * from log_referers where verified=%d";
+			if (($referers = $this->db->execute($query, 0)) == false) {
+				return;
+			}
+
+			/* Verify referer logs
+			 */
+			$verified = array();
+			foreach ($referers as $referer) {
+				if (in_array($referer["url"], $verified)) {
+					continue;
+				}
+
+				$page = follow_http_redirects($referer["url"]);
+
+				array_push($verified, $referer["url"]);
+
+				/* Delete upon wrong status code
+				 */
+				$wrong_status = array(0, 302, 401, 403, 404);
+				if (in_array($page["status"], $wrong_status)) {
+					$this->delete_referer_log($referer);
+					continue;
+				}
+
+				/* Ignore other status codes
+				 */
+				if ($page["status"] != 200) {
+					continue;
+				}
+
+				/* Delete upon missing link
+				 */
+				if (strpos($page["body"], WEBSITE_DOMAIN) === false) {
+					$this->delete_referer_log($referer);
+					continue;
+				}
+
+				/* Mark referer log as verified
+				 */
+				$this->approve_referer_log($referer);
+			}
+		}
+	}
+
+	/* Connect to database
+	 */
+	$db = new MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
+	if ($db->connected == false) {
+		exit("Internal error: database not available.\n");
+	}
+
+	$verify = new verify_referer_log($db);
+	$verify->execute();
+?>

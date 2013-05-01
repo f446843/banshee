@@ -16,3 +16,7 @@ input.switch {
 table.list {
 	margin-bottom:15px;
 }
+
+input.button {
+	padding:0 20px;
+}

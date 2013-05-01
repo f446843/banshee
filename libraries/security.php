@@ -15,7 +15,7 @@
 	define("VALIDATE_NUMBERS",      "0123456789");
 	define("VALIDATE_EMAIL",        VALIDATE_LETTERS.VALIDATE_NUMBERS."_-@.");
 	define("VALIDATE_SYMBOLS",      "!@#$%^&*()_-+={}[]|\:;\"'`~<>,./?");
-	define("VALIDATE_URL",          VALIDATE_LETTERS.VALIDATE_NUMBERS."-_/.");
+	define("VALIDATE_URL",          VALIDATE_LETTERS.VALIDATE_NUMBERS."-_/.=");
 
 	define("VALIDATE_NONEMPTY",     0);
 
@@ -31,23 +31,6 @@
 		}
 	}
 
-	/* Remove magic quotes from string
-	 *
-	 * INPUT:  array/string data
-	 * OUTPUT: array/string data
-	 * ERROR:  -
-	 */
-	function remove_magic_quotes($data) {
-		if (is_array($data) == false) {
-			$data = stripslashes($data);
-		} else foreach ($data as &$value) {
-			$value = remove_magic_quotes($value);
-		}
-
-		return $data;
-	}
-
-
 	/* Prevent Cross-Site Request Forgery
 	 * Note that this protection is not 100% safe (browsers that hide this line).
 	 *
@@ -59,10 +42,10 @@
 		if ($_SERVER["REQUEST_METHOD"] != "POST") {
 			return false;
 		}
-		
+
 		if (isset($_SERVER["HTTP_REFERER"]) == false) {
 			if ($_SESSION["csrf_warning_shown"] == false) {
-				$output->add_system_warning("Your browser hides the referrer HTTP header line. You are therefor vulnerable for CSRF on this website!");
+				$output->add_system_warning("Your browser hides the referrer HTTP header line. You are therefor vulnerable for CSRF attacks via this website!");
 				$_SESSION["csrf_warning_shown"] = true;
 			}
 			return false;
@@ -73,37 +56,22 @@
 		if (($protocol != "http:") && ($protocol == "https:")) {
 			return false;
 		}
-		if ($_SERVER["HTTP_HOST"] == $referer_host) {
+
+		$valid_hostnames = array($_SERVER["HTTP_HOST"]);
+		if (in_array($referer_host, $valid_hostnames)) {
 			return false;
 		}
 
-		$user->log_action("CSRF attempt from %s blocked", $_SERVER["HTTP_REFERER"]);
+		$message = sprintf("CSRF attempt from %s blocked", $_SERVER["HTTP_REFERER"]);
+
+		$output->add_system_warning($message);
+		$user->log_action($message);
 		$user->logout();
 		$_SERVER["REQUEST_METHOD"] = "GET";
 		$_GET = array();
 		$_POST = array();
 
 		return true;
-	}
-
-	/* Remove dangerous characters from string
-	 *
-	 * INPUT:  string text
-	 * OUTPUT: string text
-	 * ERROR:  -
-	 */
-	function secure_input($data) {
-		if (is_array($data) == false) {
-			$data = str_replace(chr(0), "", $data);
-			$special_chars = "/[".chr(1)."-".chr(8)."]|".
-							 "[".chr(11).chr(12)."]|".
-							 "[".chr(14)."-".chr(31)."]/";
-			$data = preg_replace($special_chars, "", $data);
-		} else foreach ($data as &$value) {
-			$value = secure_input($value);
-		}
-
-		return $data;
 	}
 
 	/* Validate input
@@ -192,22 +160,6 @@
 	function valid_phonenumber($phonenr) {
 		$phonenr = str_replace(" ", "", $phonenr);
 		return preg_match("/^(\+31|0)([0-9]{9}|6-?[0-9]{8}|[0-9]{2}-?[0-9]{7}|[0-9]{3}-?[0-9]{6})$/", $phonenr) === 1;
-	}
-
-	/* Prepare string for unescaped output
-	 *
-	 * INPUT:  string data
-	 * OUTPUT: string data
-	 * ERROR:  -
-	 */
-	function unescaped_output($str) {
-		$str = htmlspecialchars($str);
-
-		$chars = array("\r", "\n");
-		$replace = array("", "<br />");
-		$str = str_replace($chars, $replace, $str);
-
-		return $str;
 	}
 
 	/* Get users with a certain role
@@ -363,19 +315,5 @@
 		}
 
 		return $key;
-	}
-
-	/* Validate captcha code
-	 *
-	 * INPUT:  string captcha code
-	 * OUTPUT: boolean captcha code valid
-	 * ERROR:  -
-	 */
-	function valid_captcha_code($code) {
-		if (isset($_SESSION["captcha_code"]) == false) {
-			return false;
-		}
-
-		return $_SESSION["captcha_code"] === $code;
 	}
 ?>

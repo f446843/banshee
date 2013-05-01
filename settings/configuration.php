@@ -1,6 +1,5 @@
 <?php
-	$preload_settings = array("start_page", "default_language", "head_title", "head_description", "head_keywords");
-	$allowed_uploads = array("jpg", "jpeg", "gif", "png", "pdf", "doc", "xls", "zip", "txt");
+	$allowed_uploads = array("jpg", "jpeg", "gif", "png", "pdf", "doc", "docx", "xls", "xlsx", "txt", "rtf");
 	$supported_languages = array(
 		"en" => "English");
 

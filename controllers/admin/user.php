@@ -63,11 +63,11 @@
 					$this->output->add_tag("result", "You are not allowed to edit this user.");
 					return;
 				}
-			} 
+			}
 
-			$this->output->add_javascript(PASSWORD_HASH.".js");
+			$this->output->add_javascript("banshee/".PASSWORD_HASH.".js");
 			$this->output->add_javascript("admin/user.js");
-			$this->output->onload_javascript("hash = window['".PASSWORD_HASH."'];");
+			$this->output->run_javascript("hash = window['".PASSWORD_HASH."'];");
 
 			$this->output->open_tag("edit");
 
@@ -101,7 +101,7 @@
 
 				$checked = in_array($role["id"], $user["roles"]);
 				$enabled = ($this->user->id != $user["id"]) || ($role["id"] != ADMIN_ROLE_ID); /* Don't disable yourself */
-				
+
 				$this->output->add_tag("role", $role["name"], array(
 					"id"      => $role["id"],
 					"checked" => show_boolean($checked),
@@ -121,7 +121,7 @@
 						$_POST["password"] = random_string(10);
 						$_POST["password_hashed"] = false;
 					}
-					if (is_false($_POST["password_hashed"])) {
+					if (is_false($_POST["password_hashed"]) && ($_POST["password"] != "")) {
 						$_POST["plaintext"] = $_POST["password"];
 						$_POST["password"] = hash(PASSWORD_HASH, $_POST["password"].hash(PASSWORD_HASH, $_POST["username"]));
 					}

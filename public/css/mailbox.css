@@ -42,6 +42,6 @@ textarea.text {
 	height:150px;
 }
 
-input.button {
+a.button, input.button {
 	margin:15px 10px 0 0;
 }

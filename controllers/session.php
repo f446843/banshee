@@ -24,7 +24,7 @@
 		}
 
 		public function execute() {
-			if ($this->user->logged_in == false) {	
+			if ($this->user->logged_in == false) {
 				$this->output->add_tag("result", "The session manager should not be accessible for non-authenticated visitors!");
 				return;
 			} else if ($this->user->session_via_database == false) {
@@ -57,7 +57,7 @@
 				 */
 				if (($session = $this->model->get_session($this->page->pathinfo[1])) == false) {
 					$this->output->add_tag("result", "Session not found.");
-				} else {	
+				} else {
 					$session["expire"] = date("j F Y, H:i:s", $session["expire"]);
 					$this->show_session_form($session);
 				}

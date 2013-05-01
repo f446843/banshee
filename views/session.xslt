@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="includes/banshee.xslt" />
+<xsl:include href="banshee/main.xslt" />
 
 <!--
 //
@@ -37,7 +37,7 @@
 </table>
 
 <input type="submit" name="submit_button" value="Update session" class="button" />
-<input type="button" value="Cancel" class="button" onClick="javascript:document.location='/session'" />
+<a href="/session" class="button">Cancel</a>
 <input type="submit" name="submit_button" value="Delete session" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </form>
 </xsl:template>

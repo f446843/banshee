@@ -1,0 +1,185 @@
+#!/usr/bin/php
+<?php
+	require("libraries/banshee.php");
+	require("libraries/security.php");
+
+	/* Show help and exit
+	 */
+	function help_exit() {
+		global $argv;
+
+		printf("Usage: %s public|private <module name> [tm|sf|db]\n", $argv[0]);
+		exit;
+	}
+
+	/* Copy file, but don't overwrite
+	 */
+	function safe_copy($source, $dest) {
+		if (file_exists($source) == false) {
+			return false;
+		} else if (file_exists($dest)) {
+			printf("Warning, destination file already exists: %s\n", $dest);
+			return false;
+		}
+
+		copy($source, $dest);
+
+		return true;
+	}
+
+	/* Set class name inside file
+	 */
+	function set_class_name($directory, $module) {
+		$filename = $directory."/".$module.".php";
+
+		if (($file = file($filename)) === false) {
+			return false;
+		}
+
+		$module = str_replace("/", "_", $module);
+		$file[1] = str_replace("XXX", $module, $file[1]);
+
+		if (($fp = fopen($filename, "w")) == false) {
+			return false;
+		}
+
+		fputs($fp, implode("", $file));
+		fclose($fp);
+
+		return true;
+	}
+
+	/* Fix include path in XSLT file
+	 */
+	function fix_view_include_path($module) {
+		$filename = "views/".$module.".xslt";
+
+		if (($count = substr_count($module, "/")) == 0) {
+			return true;
+		} else if (($file = file($filename)) === false) {
+			return false;
+		}
+
+		foreach ($file as $i => $line) {
+			if (substr($line, 0, 12) != "<xsl:include") {
+				continue;
+			}
+			$file[$i] = substr($line, 0, 19).str_repeat("../", $count).substr($line, 19);
+		}
+
+		if (($fp = fopen($filename, "w")) == false) {
+			return false;
+		}
+
+		fputs($fp, implode("", $file));
+		fclose($fp);
+
+		return true;
+	}
+
+	/* Start
+	 */
+	error_reporting(E_ALL & ~E_NOTICE);
+
+	if (count($argv) < 3) {
+		help_exit();
+	} else if (in_array($argv[1], array("public", "private")) == false) {
+		help_exit();
+	}
+
+	if (is_dir("settings") == false) {
+		exit("Not inside a Banshee website directory.\n");
+	}
+
+	$access = $argv[1];
+	$view = trim($argv[2], "/");
+	list($module) = explode(".", $view);
+	$type = $argv[3];
+
+	/* Validate module name
+	 */
+	$module_characters = VALIDATE_NONCAPITALS.VALIDATE_NUMBERS."/_";
+	if (valid_input($module, $module_characters) == false) {
+		exit("Invalid module name.\n");
+	}
+
+	/* Validate type
+	 */
+	if ($type === null) {
+		$type = "page";
+	} else if ($type == "tm") {
+		$type = "tablemanager";
+	} else if ($type == "sf") {
+		$type = "splitform";
+	} else if ($type == "db") {
+		$type = "crud";
+	} else {
+		exit("Invalid module type.\n");
+	}
+
+	/* Check for module existence
+	 */
+	chdir(dirname($argv[0])."/settings");
+
+	if (in_array($view, public_pages())) {
+		printf("Module '%s' is already a public module.\n", $module);
+		exit;
+	} else if (in_array($view, private_pages())) {
+		printf("Module '%s' is already a private module.\n", $module);
+		exit;
+	}
+
+	chdir("..");
+
+	/* Make directories
+	 */
+	$locations = array("controllers", "models", "views", "public/css");
+
+	$ofs = 0;
+	while (($pos = strpos($module, "/", $ofs)) !== false) {
+		$ofs = $pos + 1;
+		$subdir = "/".substr($module, 0, $pos);
+		foreach ($locations as $location) {
+			if (file_exists($location.$subdir) == false) {
+				printf("Creating directory %s%s.\n", $location, $subdir);
+				mkdir($location.$subdir, 0755, true);
+			}
+		}
+	}
+
+	/* Copy templates
+	 */
+	printf("Creating controller, model, view and stylesheet.\n");
+	safe_copy("templates/".$type."_controller.php", "controllers/".$module.".php");
+	safe_copy("templates/".$type."_model.php", "models/".$module.".php");
+	safe_copy("templates/".$type."_view.xslt", "views/".$view.".xslt");
+	safe_copy("templates/".$type."_style.css", "public/css/".$module.".css");
+	touch("public/css/".$module.".css");
+
+	/* Set class names
+	 */
+	printf("Setting controller and model class name.\n");
+	set_class_name("controllers", $module);
+	set_class_name("models", $module);
+
+	/* Fix include path in XSLT
+	 */
+	printf("Fixing include paths in view.\n");
+	fix_view_include_path($module);
+
+	/* Add to configuration file
+	 */
+	printf("Adding module to %s pages configuration.\n", $access);
+	if (($fp = fopen("settings/".$access."_pages.conf", "a")) !== false) {
+		fputs($fp, $view."\n");
+		fclose($fp);
+	}
+
+	/* Register private page in database
+	 */
+	if ($access == "private") {
+		system("database/private_pages");
+	}
+
+	print "Done.\n";
+?>

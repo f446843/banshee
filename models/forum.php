@@ -1,8 +1,4 @@
 <?php
-	require_once("../helpers/bbcodes.php");
-	require_once("../helpers/anti_spam.php");
-	require_once("../helpers/smilies.php");
-
 	class forum_model extends model {
 		public function get_forums() {
 			$query = "select *,(select count(*) from forum_topics where forum_id=f.id) as topics ".
@@ -125,9 +121,12 @@
 			if (trim($topic["content"]) == "") {
 				$this->output->add_message("Empty message not allowed.");
 				$result = false;
-			} else if (message_is_spam($topic["content"])) {
-				$this->output->add_message("Message seen as spam.");
-				$result = false;
+			} else {
+				$message = new message($topic["content"]);
+				if ($message->is_spam) {
+					$this->output->add_message("Message seen as spam.");
+					$result = false;
+				}
 			}
 
 			return $result;

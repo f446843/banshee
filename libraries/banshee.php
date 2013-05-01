@@ -8,7 +8,7 @@
 
 	/* For internal usage. Only change if you know what you're doing!
 	 */
-	define("BANSHEE_VERSION", "3.6");
+	define("BANSHEE_VERSION", "4.0");
 	define("ADMIN_ROLE_ID", 1);
 	define("YES", 1);
 	define("NO", 0);
@@ -21,12 +21,13 @@
 	define("PASSWORD_HASH", "sha256");
 	define("SESSION_NAME", "WebsiteSessionID");
 	define("DAY", 86400);
-	define("PAGE_MODULE", "system/page");
-	define("ERROR_MODULE", "system/error");
-	define("LOGIN_MODULE", "login");
+	define("PAGE_MODULE", "banshee/page");
+	define("ERROR_MODULE", "banshee/error");
+	define("LOGIN_MODULE", "banshee/login");
 	define("LOGOUT_MODULE", "logout");
 	define("FPDF_FONT_PATH", "../extra/fpdf_fonts/");
 	define("PHOTO_PATH", "photos");
+	define("SSL_CERT_SERIAL_VAR", "SSL_CERT_SERIAL");
 
 	/* Auto class loader
 	 *
@@ -119,19 +120,19 @@
 		return $pages;
 	}
 
-	/* Return all pages with OPtional ReadOnly Access Rights
+	/* Return all pages with optional readonly access rights
 	 *
 	 * INPUT:  -
-	 * OUTPUT: array OPROAR pages
+	 * OUTPUT: array readonly/readwrite pages
 	 * ERROR:  -
 	 */
-	function oproar_pages() {
+	function private_rorw_pages() {
 		$config = config_file("private_pages");
 
 		$pages = array();
 		foreach ($config as $line) {
 			list($page, $type) = explode(":", $line, 2);
-			if ($type == "readonly") {
+			if ($type == "rorw") {
 				array_push($pages, $page);
 			}
 		}
@@ -147,13 +148,11 @@
 	 */
 	function page_to_module($page) {
 		if (is_array($page) == false) {
-			$page = str_replace("*/", "", $page);
-
 			if (($pos = strrpos($page, ".")) !== false) {
 				$page = substr($page, 0, $pos);
 			}
-		} else foreach ($page as &$item) {
-			$item = page_to_module($item);
+		} else foreach ($page as $i => $item) {
+			$page[$i] = page_to_module($item);
 		}
 
 		return $page;
@@ -172,8 +171,8 @@
 			} else {
 				$page = "";
 			}
-		} else foreach ($page as &$item) {
-			$item = page_to_type($item);
+		} else foreach ($page as $i => $item) {
+			$page[$i] = page_to_type($item);
 		}
 
 		return $page;
@@ -217,8 +216,8 @@
 			array_shift($args);
 			$info = vsprintf($action, $args);
 		} else if (is_array($info)) {
-			foreach ($info as $key => &$value) {
-				$value = "\t".$key." => ".chop($value);
+			foreach ($info as $key => $value) {
+				$info[$key] = "\t".$key." => ".chop($value);
 			}
 			$info = "array:\n".implode("\n", $info);
 		}
@@ -235,8 +234,8 @@
 
 	/* Flatten array to new array with depth 1
 	 *
-	 * INPUT:  array
-	 * OUTPUT: array
+	 * INPUT:  array data
+	 * OUTPUT: array data
 	 * ERROR:  -
 	 */
 	function array_flatten($data) {
@@ -307,25 +306,31 @@
 
 	/* Load configuration file
 	 *
-	 * INPUT:  string configuration
+	 * INPUT:  string configuration[, bool remove comments]
 	 * OUTPUT: array( key => value[, ...] )
 	 * ERROR:  -
 	 */
-	function config_file($file) {
+	function config_file($file, $remove_comments = true) {
 		static $cache = array();
 
 		if (isset($cache[$file])) {
 			return $cache[$file];
 		}
 
-		$config_file = "../settings/".$file.".conf";
+		if ($config_file[0] != "/") {
+			$config_file = "../settings/".$file.".conf";
+		}
 		if (file_exists($config_file) == false) {
 			return array();
 		}
 
 		$config = array();
 		foreach (file($config_file) as $line) {
-			if (($line = trim(preg_replace("/#.*/", "", $line))) !== "") {
+			if ($remove_comments) {
+				$line = trim(preg_replace("/(^| )#.*/", "", $line));
+			}
+
+			if ($line !== "") {
 				array_push($config, $line);
 			}
 		}
@@ -335,9 +340,15 @@
 		return $config;
 	}
 
-	/* Parse website.conf
+	/* Website configuration
 	 */
-	foreach (config_file("website") as $line) {
+	if (isset($_ENV["banshee_config_file"])) {
+		$config_file = $_ENV["banshee_config_file"];
+	} else {
+		$config_file = "website";
+	}
+
+	foreach (config_file($config_file) as $line) {
 		list($key, $value) = explode("=", chop($line), 2);
 		define(trim($key), trim($value));
 	}
@@ -345,4 +356,8 @@
 	/* PHP settings
 	 */
 	ini_set("magic_quotes_runtime", 0);
+
+	if (isset($_SERVER["HTTP_X_FORWARDED_FOR"])) {
+		$_SERVER["REMOTE_ADDR"] = $_SERVER["HTTP_X_FORWARDED_FOR"];
+	}
 ?>

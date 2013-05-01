@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../includes/banshee.xslt" />
+<xsl:include href="../banshee/main.xslt" />
 
 <!--
 //
@@ -19,8 +19,8 @@
 	</table>
 </xsl:for-each>
 
-<input type="button" value="New FAQ" class="button" onClick="javascript:document.location='/admin/faq/new'" />
-<input type="button" value="Back" class="button" onClick="javascript:document.location='/admin'" />
+<a href="/admin/faq/new" class="button">New FAQ</a>
+<a href="/admin" class="button">Back</a>
 </xsl:template>
 
 <!--
@@ -57,7 +57,7 @@
 </table>
 
 <input type="submit" name="submit_button" value="Save FAQ" class="button" />
-<input type="button" value="Back" class="button" onClick="javascript:document.location='/admin/faq'" />
+<a href="/admin/faq" class="button">Back</a>
 <xsl:if test="faq/@id">
 <input type="submit" name="submit_button" value="Delete FAQ" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>

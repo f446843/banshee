@@ -61,7 +61,7 @@
 				}
 			}
 
-			$this->output->add_css("includes/pagination.css");
+			$this->output->add_css("banshee/pagination.css");
 		}
 
 		/* Magic method get
@@ -100,7 +100,7 @@
 				return false;
 			}
 			$max_links = (floor($max_links / 2) * 2) + 1;
-			
+
 			/* Calculate minimum and maximum page number
 			 */
 			if ($this->max_page > $max_links) {
@@ -122,7 +122,7 @@
 			/* Generate XML for browse links
 			 */
 			$this->output->open_tag("pagination", array(
-				"page" => $this->page, 
+				"page" => $this->page,
 				"max"  => $this->max_page,
 				"step" => $step));
 			for ($page = $min; $page <= $max; $page++) {

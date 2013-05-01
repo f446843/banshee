@@ -31,7 +31,8 @@
 			"System" => array(
 				"Logging"       => array("admin/logging", "logging.png"),
 				"Action log"    => array("admin/action", "action.png"),
-				"Settings"      => array("admin/settings", "settings.png")));
+				"Settings"      => array("admin/settings", "settings.png"),
+				"API test"      => array("admin/apitest", "apitest.png")));
 
 		public function execute() {
 			if (($this->user->id == 1) && ($this->user->password == "c10b391ff5e75af6ee8469539e6a5428f09eff7e693d6a8c4de0e5525cd9b287")) {
@@ -40,6 +41,10 @@
 
 			if ($this->settings->secret_website_code == "CHANGE_ME_INTO_A_RANDOM_STRING") {
 				$this->output->add_system_warning("Don't forget to change the secret_website_code setting.");
+			}
+
+			if (is_true(DEBUG_MODE)) {
+				$this->output->add_system_warning("Website is running in debug mode. Set DEBUG_MODE in settings/website.conf to 'no'.");
 			}
 
 			if (is_false(MULTILINGUAL)) {

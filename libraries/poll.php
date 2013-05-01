@@ -8,19 +8,20 @@
 
 	class poll {
 		private $db = null;
-		private $settings = null;
 		private $output = null;
+		private $settings = null;
 
 		/* Constructor
 		 *
-		 * INPUT:  object database, object settings, object output
+		 * INPUT:  object database, object output
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function __construct($db, $settings, $output) {
+		public function __construct($db, $output) {
 			$this->db = $db;
-			$this->settings = $settings;
 			$this->output = $output;
+
+			$this->settings = new settings($this->db);
 		}
 
 		/* Get active poll
@@ -31,7 +32,8 @@
 		 */
 		private function get_active_poll() {
 			$query = "select *, UNIX_TIMESTAMP(begin) as begin, UNIX_TIMESTAMP(end) as end ".
-			         "from polls where begin<=now() and end>now() order by begin desc limit 1";
+			         "from polls where begin<=date(now()) and end>=date(now()) ".
+			         "order by begin desc limit 1";
 			if (($result = $this->db->execute($query)) == false) {
 				return false;
 			}
@@ -52,7 +54,7 @@
 				if (($banned_ip = trim($banned_ip)) == "") {
 					continue;
 				}
-				if ($_SERVER["REMOTE_ADDR"] == $banned_ip)) {
+				if ($_SERVER["REMOTE_ADDR"] == $banned_ip) {
 					return false;
 				}
 			}
@@ -128,7 +130,7 @@
 		 * ERROR:  false
 		 */
 		public function to_output() {
-			$this->output->add_css("includes/poll.css");
+			$this->output->add_css("banshee/poll.css");
 
 			if (($poll = $this->get_active_poll()) == false) {
 				return false;
@@ -137,7 +139,7 @@
 			$today = strtotime("today 00:00:00");
 			$poll_open = ($poll["end"] >= $today) && $this->user_may_vote($poll["id"]);
 
-			$this->output->open_tag("active_poll");
+			$this->output->open_tag("active_poll", array("can_vote" => show_boolean($poll_open)));
 			$this->output->add_tag("question", $poll["question"]);
 
 			$query = "select * from poll_answers where poll_id=%d order by answer";

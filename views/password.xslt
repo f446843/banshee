@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="includes/banshee.xslt" />
+<xsl:include href="banshee/main.xslt" />
 
 <!--
 //
@@ -15,7 +15,7 @@ Enter your username and e-mail address to reset your password.
 <tr><td>E-mail:</td><td><input type="text" name="email" class="text" /></td></tr>
 </table>
 <input type="submit" name="submit_button" value="Reset password" class="button" />
-<input type="button" value="Cancel" class="button" onClick="javascript:document.location='/login'" />
+<a href="/login" class="button">Cancel</a>
 </form>
 </xsl:template>
 

@@ -4,7 +4,9 @@
 			if (($pages = $this->model->get_pages()) === false) {
 				$this->output->add_tag("result", "Database error.");
 			} else {
-				$this->output->open_tag("overview");
+				list($webserver) = explode(" ", $_SERVER["SERVER_SOFTWARE"], 2);
+
+				$this->output->open_tag("overview", array("hiawatha" => show_boolean($webserver == "Hiawatha")));
 				$this->output->open_tag("pages");
 				foreach ($pages as $page) {
 					$page["visible"] = show_boolean($page["visible"]);
@@ -15,7 +17,7 @@
 			}
 		}
 
-		private function show_page_form($page) {	
+		private function show_page_form($page) {
 			global $supported_languages;
 
 			$this->output->set_xslt_parameter("admin_role_id", ADMIN_ROLE_ID);
@@ -30,7 +32,7 @@
 			}
 
 			$this->output->add_javascript("ckeditor/ckeditor.js");
-			$this->output->add_javascript("start_ckeditor.js");
+			$this->output->add_javascript("banshee/start_ckeditor.js");
 
 			$this->output->open_tag("edit");
 
@@ -105,7 +107,8 @@
 							}
 							$this->user->log_action("page %s updated", $name);
 
-							if ($this->settings->hiawatha_cache_time > 0) {
+							list($webserver) = explode(" ", $_SERVER["SERVER_SOFTWARE"], 2);
+							if (($this->settings->hiawatha_cache_time > 0) && ($webserver == "Hiawatha")) {
 								if ($_POST["url"] == "/".$this->settings->start_page) {
 									header("X-Hiawatha-Cache-Remove: all");
 								} else {
@@ -127,6 +130,10 @@
 						$this->user->log_action("page %s deleted", $url);
 						$this->show_page_overview();
 					}
+				} else if ($_POST["submit_button"] == "Clear Hiawatha cache") {
+					header("X-Hiawatha-Cache-Remove: all");
+					$this->output->add_system_message("Hiawatha webserver cache cleared.");
+					$this->show_page_overview();
 				} else {
 					$this->show_page_overview();
 				}

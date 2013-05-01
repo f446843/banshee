@@ -1,5 +1,35 @@
 <?php
 	class profile_model extends model {
+		public function last_account_logs() {
+			if (($fp = fopen("../logfiles/actions.log", "r")) == false) {
+				return false;
+			}
+
+			$result = array();
+
+			while (($line = fgets($fp)) !== false) {	
+				list($ip, $timestamp, $user_id, $message) = explode("|", chop($line));
+
+				if ($user_id == "-") {
+					continue;
+				} else if ($user_id != $this->user->id) {
+					continue;
+				}
+
+				array_push($result, array(
+					"ip"        => $ip,
+					"timestamp" => $timestamp,
+					"message"   => $message));
+				if (count($result) > 15) {
+					array_shift($result);
+				}
+			}
+
+			fclose($fp);
+
+			return array_reverse($result);
+		}
+
 		public function profile_oke($profile) {
 			$result = true;
 
@@ -47,7 +77,7 @@
 				array_push($keys, "password");
 				array_push($keys, "status");
 				if (is_false($profile["password_hashed"])) {
-					$profile["password"] = hash(PASSWORD_HASH, $profile["password"].$this->user->username);
+					$profile["password"] = hash(PASSWORD_HASH, $profile["password"].hash(PASSWORD_HASH, $this->user->username));
 				}
 			}
 

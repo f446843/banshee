@@ -53,7 +53,7 @@
 				$this->output->add_message("This role cannot be changed.");
 				$result = false;
 			}
-			
+
 			if ($role["name"] == "") {
 				$this->output->add_message("The name cannot be empty.");
 				$result = false;

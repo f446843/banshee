@@ -23,7 +23,7 @@
 				array_push($args, $user_id);
 			}
 
-			$query .= " order by timestamp desc limit %d,%d"; 
+			$query .= " order by timestamp desc limit %d,%d";
 			array_push($args, $offset, $count);
 
 			return $this->db->execute($query, $args);
@@ -77,7 +77,7 @@
 
 			/* Create new tags
 			 */
-			$tags = explode(",", strtolower($weblog["new_tags"]));
+			$tags = explode(",", $weblog["new_tags"]);
 			foreach ($tags as $tag) {
 				if (($tag = trim($tag)) == "") {
 					continue;

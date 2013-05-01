@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="includes/banshee.xslt" />
+<xsl:include href="banshee/main.xslt" />
 
 <!--
 //
@@ -8,9 +8,9 @@
 //
 //-->
 <xsl:template match="content">
-<script type="text/javascript" src="/js/calendar.js" />
-<script type="text/javascript" src="/js/calendar-en.js" />
-<script type="text/javascript" src="/js/calendar-setup.js" />
+<script type="text/javascript" src="/js/banshee/calendar.js" />
+<script type="text/javascript" src="/js/banshee/calendar-en.js" />
+<script type="text/javascript" src="/js/banshee/calendar-setup.js" />
 
 <input type="text" id="date" name="date" value="{date}" class="input" />
 <input type="button" id="opencal" value=".." />

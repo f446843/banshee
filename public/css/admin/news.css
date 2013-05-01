@@ -9,6 +9,10 @@ table.list th.timestamp {
 	width:180px;
 }
 
+a.button {
+	margin-right:10px;
+}
+
 /* Edit
  */
 table.tablemanager {

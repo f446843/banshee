@@ -7,7 +7,8 @@
 	 */
 
 	abstract class tablemanager_model extends model {
-		private $valid_types = array("integer", "varchar", "text", "ckeditor", "boolean", "datetime", "enum", "foreignkey", "blob");
+		private $valid_types = array("integer", "varchar", "text", "ckeditor",
+			"boolean", "datetime", "enum", "foreignkey", "blob");
 		protected $table = null;
 		protected $order = "id";
 		protected $desc_order = false;
@@ -120,7 +121,7 @@
 					array_push($args, $column);
 				}
 			}
-			
+
 			$query = "select ".implode(",", array_fill(0, count($args), "%S"))." from %S";
 			array_push($args, $this->table);
 
@@ -377,10 +378,12 @@
 					"readonly" => false,
 					"virtual"  => false);
 				foreach ($defaults as $key => $value) {
-					if (isset($element[$key]) == false) {	
+					if (isset($element[$key]) == false) {
 						$element[$key] = $value;
 					}
 				}
+
+				unset($element);
 			}
 
 			return $class_oke;

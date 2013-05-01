@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="includes/banshee.xslt" />
+<xsl:include href="banshee/main.xslt" />
 
 <!--
 //
@@ -25,7 +25,7 @@
 </xsl:for-each>
 </div>
 
-<input type="button" value="Back" onClick="javascript:document.location='/{/output/page}'" class="button" />
+<a href="/{/output/page}" class="button">Back</a>
 </xsl:template>
 
 <!--
@@ -36,10 +36,10 @@
 <xsl:template match="month">
 <div class="extbox">
 <div class="buttons">
-<input type="button" value="List view" onClick="javascript:document.location='/{/output/page}/list'" class="button" />
-<input type="button" value="Previous month" onClick="javascript:document.location='/{/output/page}/{prev}'" class="button" />
-<input type="button" value="Current month" onClick="javascript:document.location='/{/output/page}/current'" class="button" />
-<input type="button" value="Next month" onClick="javascript:document.location='/{/output/page}/{next}'" class="button" />
+<a href="/{/output/page}/list" class="button">List view</a>
+<a href="/{/output/page}/{prev}" class="button">Previous month</a>
+<a href="/{/output/page}/current" class="button">Current month</a>
+<a href="/{/output/page}/{next}" class="button">Next month</a>
 </div>
 
 <h2><xsl:value-of select="@title" /></h2>
@@ -82,7 +82,7 @@
 <xsl:value-of disable-output-escaping="yes" select="content" />
 </div>
 
-<input type="button" value="Back" onClick="javascript:document.location='/{/output/page}'" class="button" />
+<a href="/{/output/page}" class="button">Back</a>
 </xsl:template>
 
 <!--

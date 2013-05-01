@@ -2,21 +2,11 @@
 	class weblog_controller extends controller {
 		private $url = null;
 
-		private function include_slimbox() {
-			$this->output->add_css("includes/slimbox2.css");
-
-			$this->output->add_javascript("jquery/jquery.js");
-			$this->output->add_javascript("jquery/slimbox2.js");
-			$this->output->add_javascript("weblog.js");
-		}
-
 		private function show_last_weblogs() {
 			if (($weblogs = $this->model->get_last_weblogs($this->settings->weblog_page_size)) === false) {
 				$this->output->add_tag("result", "Database error.", $this->url);
 				return;
 			}
-
-#			$this->include_slimbox();
 
 			$this->output->open_tag("weblogs");
 
@@ -46,8 +36,6 @@
 				return;
 			}
 
-#			$this->include_slimbox();
-
 			$this->output->title = $weblog["title"]." - Weblog";
 
 			$weblog["timestamp"] = date("j F Y, H:i", $weblog["timestamp"]);
@@ -74,8 +62,12 @@
 			foreach ($weblog["comments"] as $comment) {
 				unset($comment["weblog_id"]);
 				unset($comment["ip_address"]);
-				$comment["content"] = unescaped_output($comment["content"]);
-				$comment["content"] = translate_smilies($comment["content"]);
+				$message = new message($comment["content"]);
+				$message->unescaped_output();
+				$message->translate_smilies();
+				$comment["content"] = $message->content;
+				unset($message);
+
 				$comment["timestamp"] = date("j F Y, H:i", $comment["timestamp"]);
 				$this->output->record($comment, "comment");
 			}

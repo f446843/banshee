@@ -44,7 +44,7 @@
 
 			/* Start
 			 */
-			$this->output->add_css("includes/splitform.css");
+			$this->output->add_css("banshee/splitform.css");
 
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				if ($_POST["splitform_current"] != $this->model->current) {

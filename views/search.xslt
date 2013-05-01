@@ -1,39 +1,38 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="includes/banshee.xslt" />
+<xsl:include href="banshee/main.xslt" />
 
+<!--
+//
+//  Content template
+//
+//-->
 <xsl:template match="content">
 <h1>Search</h1>
-<script type="text/javascript">
-	function log_search_query(sc, searcher, query) {
-		ajax.get("search", "query=" + query);
-	}
+<form action="/{/output/page}" method="post">
+<input type="text" name="query" value="{query}" id="query" class="text query" /><input type="submit" name="submit_button" value="Search" class="button" />
+<div class="sections">Sections:
+<xsl:for-each select="sections/section">
+<span><input type="checkbox" name="{.}"><xsl:if test="@checked='yes'"><xsl:attribute name="checked">checked</xsl:attribute></xsl:if></input> <xsl:value-of select="@label" /></span>
+</xsl:for-each>
+</div>
+</form>
 
-	function OnLoad() {
-		var searchControl = new google.search.SearchControl();
+<xsl:if test="result">
+<div class="error"><xsl:value-of select="result" /></div>
+</xsl:if>
 
-		// callback
-		searchControl.setSearchStartingCallback(this, log_search_query);
-
-		// web search, open
-		options = new google.search.SearcherOptions();
-		options.setExpandMode(google.search.SearchControl.EXPAND_MODE_OPEN);
-
-		// Add in a full set of searchers
-		var searcher = new google.search.WebSearch();
-		searcher.setSiteRestriction("<xsl:value-of select="hostname" />");
-		searchControl.addSearcher(searcher, options);
-
-		// tell the searcher to draw itself and tell it where to attach
-		searchControl.draw(document.getElementById("searchcontrol"));
-	}
-
-	ajax = new ajax();
-	google.load("search", "1.0", {"language" : "en"});
-	google.setOnLoadCallback(OnLoad, true);
-</script>
-
-<div id="searchcontrol">Loading Google search controller...</div>
+<xsl:for-each select="section">
+	<h2><xsl:value-of select="@label" /></h2>
+	<ul class="pagination">
+	<xsl:for-each select="hit">
+		<li>
+		<div class="link"><a href="{url}"><xsl:value-of select="text" /></a></div>
+		<div class="preview"><xsl:value-of select="content" /></div>
+		</li>
+	</xsl:for-each>
+	</ul>
+</xsl:for-each>
 </xsl:template>
 
 </xsl:stylesheet>

@@ -29,7 +29,6 @@ Banshee needs PHP's MySQL and XSL module. Use the following PHP settings:
 	magic_quotes_gpc = Off
 	register_globals = Off
 
-
 Configure your database
 -----------------------
 Change the database settings in 'settings/website.conf' and run the script 'database/setup_database'. This will create a MySQL user, a MySQL database and initialize the created database.

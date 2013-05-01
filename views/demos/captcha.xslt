@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../includes/banshee.xslt" />
+<xsl:include href="../banshee/main.xslt" />
 
 <!--
 //
@@ -18,7 +18,7 @@
 <p>Code of previous captcha correct: <xsl:value-of select="valid" /></p>
 </xsl:if>
 
-<input type="button" value="Back" class="button" onClick="javascript:document.location='/demos'" />
+<a href="/demos" class="button">Back</a>
 </xsl:template>
 
 </xsl:stylesheet>

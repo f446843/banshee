@@ -9,9 +9,8 @@ ul.users {
 	list-style-type:square;
 	margin:0px;
 }
-input.button {
-	margin-top:15px;
-	margin-right:10px;
+a.button, input.button {
+	margin:15px 10px 0 0;
 }
 
 input.text {
@@ -42,7 +41,6 @@ div.role input.role {
 div.role select.role {
 	margin-right:3px;
 	border:1;
-	height:19px;
 }
 
 h4 {

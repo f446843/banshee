@@ -68,10 +68,10 @@
 			$this->output->close_tag();
 
 			$this->output->add_javascript("jquery/jquery.js");
-			$this->output->add_javascript("jquery/slimbox2.js");
+			$this->output->add_javascript("banshee/jquery.prettyphoto.js");
 			$this->output->add_javascript("photo.js");
 
-			$this->output->add_css("includes/slimbox2.css");
+			$this->output->add_css("banshee/prettyphoto.css");
 		}
 
 		private function show_photo($photo) {
@@ -87,7 +87,7 @@
 			header("Content-Type: ".$this->extensions[$extension]);
 			readfile(PHOTO_PATH."/".$photo);
 
-			$this->output->disabled = true;
+			$this->output->disable();
 		}
 
 		public function execute() {

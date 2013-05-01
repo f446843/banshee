@@ -25,7 +25,7 @@ input.text, select.text {
 	width:250px;
 }
 
-input.button, input.submit {
+input.button, input.submit, a.button {
 	margin-right:10px;
 }
 

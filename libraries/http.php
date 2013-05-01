@@ -33,6 +33,20 @@
 			$this->port = $this->connect_port = $port;
 		}
 
+		/* Magic method get
+		 *
+		 * INPUT:  string key
+		 * OUTPUT: mixed value
+		 * ERROR:  null
+		 */
+		public function __get($key) {
+			switch ($key) {
+				case "cookies": return $this->cookies;
+			}
+
+			return null;
+		}
+
 		/* Magic method call
 		 *
 		 * INPUT:  string method, string URI[, string body]
@@ -52,8 +66,8 @@
 			switch ($method) {
 				case "POST":
 					if (is_array($body)) {
-						foreach ($body as $key => &$value) {
-							$value = urlencode($key)."=".urlencode($value);
+						foreach ($body as $key => $value) {
+							$body[$key] = urlencode($key)."=".urlencode($value);
 						}
 						$body = implode("&", $body);
 					}
@@ -62,6 +76,9 @@
 					$this->add_header("Content-Type", "application/x-www-form-urlencoded");
 					break;
 				case "PUT":
+					if (is_array($body)) {	
+						$body = implode("", $body);
+					}
 					$this->add_header("Content-Length", strlen($body));
 					break;
 				default:
@@ -226,15 +243,14 @@
 						do {
 							list($size, $data) = explode("\r\n", $data, 2);
 							$size = hexdec($size);
-
 							if ($size > 0) {
+								$chunk = substr($data, 0, $size);
 								if (substr($data, $size, 2) != "\r\n") {
-									$result["body"] = false;
+									$result["body"] = "";
 									break;
 								}
-								$chunk = substr($data, 0, $size);
-								$result["body"] .= $chunk;
 								$data = substr($data, $size + 2);
+								$result["body"] .= $chunk;
 							} else {
 								break;
 							}

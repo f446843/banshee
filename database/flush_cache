@@ -8,6 +8,5 @@
 		exit("Internal error: database not available.\n");
 	}
 
-	$query = "truncate table %S";
-	$db->query($query, "cache");
+	$db->query("truncate table %S", "cache");
 ?>

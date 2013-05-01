@@ -16,14 +16,14 @@ In no event shall the author of Banshee be liable for any bug in this software.
 The following files are not part of the Banshee PHP framework:
 
 	- CKeditor          : public/js/ckeditor/*
-	- The DHTML Calendar: public/js/calendar*.js
-	                      public/css/includes/calendar.css
+	- DataTables        : public/js/banshee/jquery.datatables.js
+	- The DHTML Calendar: public/js/banshee/calendar*.js
 	- FPDF              : libraries/fpdf.php
 	- jQuery            : public/js/jquery/*
-	- MD5 javascript    : public/js/md5.js
-	- PHP.js            : public/js/php.js
-	- SHA1 javascript   : public/js/sha1.js
-	- SHA256 javascript : public/js/sha256.js
+	- MD5 javascript    : public/js/banshee/md5.js
+	- prettyPhoto       : public/js/banshee/jquery.prettyphoto.js
+	- SHA1 javascript   : public/js/banshee/sha1.js
+	- SHA256 javascript : public/js/banshee/sha256.js
 	- ZIP library       : libraries/zipfile.php
 
 Look for copyright messages inside those files.

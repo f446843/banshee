@@ -49,14 +49,14 @@
 		}
 
 		public function delete_message($message_id) {
-			if (($message = $this->db->entry("forum_messages", $message_id)) == false) {	
+			if (($message = $this->db->entry("forum_messages", $message_id)) == false) {
 				return false;
 			}
 
 			if ($this->db->delete("forum_messages", $message_id) == false) {
 				return false;
 			}
-			
+
 			$query = "select count(*) as messages from forum_messages where topic_id=%d";
 			if (($result = $this->db->execute($query, $message["topic_id"])) == false) {
 				return false;

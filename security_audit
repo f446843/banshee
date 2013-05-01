@@ -11,7 +11,7 @@
 
 	require("libraries/banshee.php");
 
-	$written_for = "3.6";
+	$written_for = "4.0";
 
 	/* Auditor class
 	 */
@@ -110,6 +110,8 @@
 				return false;
 			}
 
+			$total = 0;
+
 			while (($file = $this->next_file()) != false) {
 				$lines = file($file);
 
@@ -118,7 +120,7 @@
 					$number++;
 					$line = trim($line);
 
-					if (substr($file, 0, 8) == "banshee/") {	
+					if (substr($file, 0, 8) == "banshee/") {
 						$index = substr($file, 8);
 					} else {
 						$index = $file;
@@ -152,13 +154,19 @@
 					}
 				}
 
-				if (count($results) > 0) {
+				if (($count = count($results)) > 0) {
+					$total += $count;
+
 					print "  ".$file.":\n";
 					foreach ($results as $line) {
 						print "    ".$line."\n";
 					}
 					print "\n";
 				}
+			}
+
+			if ($total == 0) {
+				print "  no issues found\n";
 			}
 		}
 	}
@@ -170,18 +178,19 @@
 		private $variables = array();
 		private $continue_var = null;
 		protected $verified = array(
-			"libraries/security.php"                       => array(298),
-			"libraries/settings.php"                       => array(35),
-			"libraries/user.php"                           => array(223),
-			"libraries/database/postgresql_connection.php" => array(14),
-			"libraries/menu.php"                           => array(42),
-			"libraries/database/mssql_connection.php:"     => array(13),
-			"libraries/database/sqlite_connection.php"     => array(14),
 			"libraries/database/mssql_connection.php"      => array(13),
-			"libraries/database/mysqli_connection.php"     => array(36),
 			"libraries/database/mysql_connection.php"      => array(14),
-			"libraries/tablemanager_model.php"             => array(159),
-			"models/admin/user.php"                        => array(8));
+			"libraries/database/mysqli_connection.php"     => array(36),
+			"libraries/database/postgresql_connection.php" => array(14),
+			"libraries/database/sqlite_connection.php"     => array(14),
+			"libraries/menu.php"                           => array(42),
+			"libraries/security.php"                       => array(250),
+			"libraries/settings.php"                       => array(41),
+			"libraries/tablemanager_controller.php"        => array(182),
+			"libraries/tablemanager_model.php"             => array(160),
+			"libraries/user.php"                           => array(258),
+			"models/admin/user.php"                        => array(8),
+			"models/search.php"                            => array(135));
 
 		protected function scan_line($line) {
 			/* PHP database query function calls
@@ -261,20 +270,20 @@
 	class output_auditor extends auditor {
 		protected $extension = "xslt";
 		protected $verified = array(
-			 "views/agenda.xslt"             => array(23, 82),
-			 "views/faq.xslt"                => array(16),
-			 "views/guestbook.xslt"          => array(16),
-			 "views/weblog.xslt"             => array(56, 78),
-			 "views/forum.xslt"              => array(68),
-			 "views/dictionary.xslt"         => array(52),
-			 "views/mailbox.xslt"            => array(34),
-			 "views/news.xslt"               => array(14),
-			 "views/includes/functions.xslt" => array(12),
-			 "views/includes/layout_pluralism.xslt" => array(53),
-			 "views/system/page.xslt"        => array(12),
-			 "views/admin/photos.xslt"       => array(29),
-			 "views/demos/googlemaps.xslt"   => array(14),
-			 "views/demos/posting.xslt"      => array(15));
+			 "views/admin/photos.xslt"              => array(29),
+			 "views/agenda.xslt"                    => array(23, 82),
+			 "views/banshee/functions.xslt"         => array(12),
+			 "views/banshee/layout_pluralism.xslt"  => array(54),
+			 "views/banshee/page.xslt"              => array(12),
+			 "views/demos/googlemaps.xslt"          => array(14),
+			 "views/demos/posting.xslt"             => array(15),
+			 "views/dictionary.xslt"                => array(52),
+			 "views/faq.xslt"                       => array(16),
+			 "views/forum.xslt"                     => array(68),
+			 "views/guestbook.xslt"                 => array(16),
+			 "views/mailbox.xslt"                   => array(34),
+			 "views/news.xslt"                      => array(14),
+			 "views/weblog.xslt"                    => array(56, 78));
 
 		protected function scan_line($line) {
 			if (strpos($line, "disable-output-escaping=\"yes\"") !== false) {
@@ -287,7 +296,7 @@
 	 */
 	error_reporting(E_ALL & ~E_NOTICE);
 
-	print "Banshee Security Audit\n\n";
+	print "Banshee Security Audit v".$written_for."\n\n";
 	print "  Note that the findings below are not necessarily a security issue.\n";
 	print "    They only require extra attention from the auditor.\n";
 	print "  Also note that this tool does not guarantee to find all security issues.\n";

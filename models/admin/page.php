@@ -41,7 +41,7 @@
 		}
 
 		public function get_layouts() {
-			if (($fp = fopen("../views/includes/banshee.xslt", "r")) == false) {
+			if (($fp = fopen("../views/banshee/main.xslt", "r")) == false) {
 				return false;
 			}
 

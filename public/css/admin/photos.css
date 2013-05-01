@@ -15,3 +15,7 @@ img.preview {
 	border:1px solid #000000;
 	padding:1px;
 }
+
+a.button {
+	margin-right:10px;
+}

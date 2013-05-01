@@ -1,16 +1,14 @@
 <?php
-	/* libraries/alphabetize.php
+	/* libraries/secure_cookie.php
 	 *
 	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework
 	 * http://www.banshee-php.org/
 	 */
 
-	require_once("../helpers/crypto.php");
-
 	class secure_cookie {
+		private $crypto = null;
 		private $validity_check = "banshee";
-		private $crypto_key = null;
 		private $expire = null;
 
 		/* Constructor
@@ -20,7 +18,7 @@
 		 * ERROR:  -
 		 */
 		public function __construct($settings) {
-			$this->crypto_key = $settings->secret_website_code;
+			$this->crypto = new AES256($settings->secret_website_code);
 			$this->expire = time() + 30 * DAY;
 		}
 
@@ -39,13 +37,16 @@
 				return null;
 			}
 
-			$value = decrypt_AES256($value, $this->crypto_key);
+			if (($value = $this->crypto->decrypt($value)) === false) {
+				return null;
+			}
 
 			if (substr($value, 0, 7) !== $this->validity_check) {
 				return null;
 			}
+			$value = substr($value, 7);
 
-			return json_decode(substr($value, 7), true);
+			return json_decode($value, true);
 		}
 
 		/* Set setting
@@ -56,7 +57,11 @@
 		 */
 		public function __set($key, $value) {
 			$value = $this->validity_check.json_encode($value);
-			$value = encrypt_AES256($value, $this->crypto_key);
+
+			if (($value = $this->crypto->encrypt($value)) === false) {
+				return;
+			}
+
 			$value = base64_encode($value);
 
 			$_COOKIE[$key] = $value;

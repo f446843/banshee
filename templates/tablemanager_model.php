@@ -1,6 +1,7 @@
 <?php
 	class XXX_model extends tablemanager_model {
 		protected $table = "table";
+		protected $order = "id";
 		protected $elements = array(
 			"number" => array(
 				"label"    => "Number",

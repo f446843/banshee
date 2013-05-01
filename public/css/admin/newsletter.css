@@ -7,6 +7,6 @@ textarea.text {
 	height:200px;
 	margin-bottom:10px;
 }
-input.button {
-	margin-right:15px;
+input.button, a.button {
+	margin-right:10px;
 }

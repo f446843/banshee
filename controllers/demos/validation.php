@@ -18,9 +18,9 @@
 
 		public function execute() {
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
-				$input = new post_data($this->output);
+				$validator = new validator($this->output);
 
-				if ($input->validate($this->pattern)) {
+				if ($validator->execute($this->pattern)) {
 					$this->output->add_system_message("Data validation oke.");
 				}
 			}

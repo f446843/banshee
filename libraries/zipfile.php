@@ -120,7 +120,7 @@
 			$fr .= pack("v", 0); //extra field length
 			$fr .= $name;
 			// end of "local file header" segment
-			
+
 			// "file data" segment
 			$fr .= $zdata;
 

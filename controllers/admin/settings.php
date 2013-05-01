@@ -8,5 +8,12 @@
 		protected $pagination_links = 7;
 		protected $pagination_step = 1;
 		protected $foreign_null = "---";
+
+		protected function handle_submit() {
+			parent::handle_submit();
+
+			$cache = new cache($this->db, "settings");
+			$cache->store("last_updated", time(), 365 * DAY);
+		}
 	}
 ?>

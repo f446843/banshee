@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../includes/banshee.xslt" />
+<xsl:include href="../banshee/main.xslt" />
 
 <!--
 //
@@ -17,8 +17,8 @@
 </xsl:for-each>
 </table>
 
-<input type="button" value="New collection" class="button" onClick="javascript:document.location='/admin/collection/new'" />
-<input type="button" value="Back" class="button" onClick="javascript:document.location='/admin'" />
+<a href="/admin/collection/new" class="button">New collection</a>
+<a href="/admin" class="button">Back</a>
 </xsl:template>
 
 <!--
@@ -44,7 +44,7 @@
 </table>
 
 <input type="submit" name="submit_button" value="Save collection" class="button" />
-<input type="button" value="Cancel" class="button" onClick="javascript:document.location='/admin/collection'" />
+<a href="/admin/collection" class="button">Cancel</a>
 
 <xsl:if test="collection/@id">
 <input type="submit" name="submit_button" value="Delete collection" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />

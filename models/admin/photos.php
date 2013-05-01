@@ -116,7 +116,7 @@
 				return false;
 			}
 			unset($image);
-			
+
 			return true;
 		}
 
@@ -160,6 +160,17 @@
 			return true;
 		}
 
+		private function delete_photo_files($item_id, $extension) {
+			$files = array(
+				PHOTO_PATH."/image_".$item_id.".".$extension,
+				PHOTO_PATH."/thumbnail_".$item_id.".".$extension);
+			foreach ($files as $file) {
+				if (file_exists($file)) {
+					unlink($file);
+				}
+			}
+		}
+
 		public function create_item($item) {
 			if ($this->db->query("begin") == false) {
 				return false;
@@ -171,7 +182,7 @@
 				return false;
 			}
 			$item["id"] = $this->db->last_insert_id;
-			
+
 			if ($this->save_image($item) == false) {
 				$this->db->query("rollback");
 				return false;
@@ -188,12 +199,9 @@
 			if (isset($item["image"])) {
 				if (($photo = $this->get_item($item["id"])) == false) {
 					return false;
-				} else if (unlink(PHOTO_PATH."/image_".$item["id"].".".$photo["extension"]) == false) {
-					return false;
-				} else if (unlink(PHOTO_PATH."/thumbnail_".$item["id"].".".$photo["extension"]) == false) {
-					return false;
 				}
 
+				$this->delete_photo_files($item["id"], $photo["extension"]);
 				$this->set_extension($item);
 				$this->elements["extension"]["readonly"] = false;
 			}
@@ -202,7 +210,9 @@
 				return false;
 			}
 
-			if (parent::update_item($item) === false) {
+			$result = parent::update_item($item);
+			$this->elements["extension"]["readonly"] = true;
+			if ($result === false) {
 				$this->db->query("rollback");
 				return false;
 			}
@@ -232,13 +242,7 @@
 				return false;
 			}
 
-			if (unlink(PHOTO_PATH."/image_".$item_id.".".$photo["extension"]) == false) {
-				$this->db->query("rollback");
-				return false;
-			} else if (unlink(PHOTO_PATH."/thumbnail_".$item_id.".".$photo["extension"]) == false) {
-				$this->db->query("rollback");
-				return false;
-			}
+			$this->delete_photo_files($item_id, $photo["extension"]);
 
 			return $this->db->query("commit") != false;
 		}

@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="includes/banshee.xslt" />
-<xsl:include href="includes/pagination.xslt" />
+<xsl:include href="banshee/main.xslt" />
+<xsl:include href="banshee/pagination.xslt" />
 
 <!--
 //
@@ -43,7 +43,7 @@
 <br clear="both" />
 
 <xsl:apply-templates select="pagination" />
-<input type="button" value="Back" class="button" onClick="javascript:document.location='/{/output/page}'" />
+<a href="/{/output/page}" class="button">Back</a>
 </xsl:template>
 
 <!--

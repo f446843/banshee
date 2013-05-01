@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../includes/banshee.xslt" />
+<xsl:include href="../banshee/main.xslt" />
 
 <!--
 //
@@ -20,8 +20,8 @@
 </xsl:for-each>
 </table>
 
-<input type="button" value="New poll" class="button" onClick="javascript:document.location='/admin/poll/new'" />
-<input type="button" value="Back" class="button" onClick="javascript:document.location='/admin'" />
+<a href="/admin/poll/new" class="button">New poll</a>
+<a href="/admin" class="button">Back</a>
 
 <h3 class="spacer">Active and previous polls</h3>
 <table class="list">
@@ -59,7 +59,7 @@
 </xsl:for-each>
 </table>
 <input type="submit" name="submit_button" value="Save poll" class="button" />
-<input type="button" value="Cancel" class="button" onClick="javascript:document.location='/admin/poll'" />
+<a href="/admin/poll" class="button">Cancel</a>
 <xsl:if test="poll/@id">
 <input type="submit" name="submit_button" value="Delete poll" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>

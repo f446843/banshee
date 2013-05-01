@@ -12,7 +12,6 @@
 		private $db = null;
 		private $settings = null;
 		private $session = null;
-		private $client_ip = null;
 		private $logged_in = false;
 		private $record = array();
 		private $is_admin = false;
@@ -28,15 +27,24 @@
 			$this->settings = $settings;
 			$this->session = $session;
 
-			$this->client_ip = $_SERVER["REMOTE_ADDR"];
-			if (isset($_SERVER["HTTP_X_FORWARDED_FOR"])) {
-				$this->client_ip .= "/".$_SERVER["HTTP_X_FORWARDED_FOR"];
+			/* Basic HTTP Authentication for web services
+			 */
+			if (isset($_SERVER["HTTP_AUTHORIZATION"])) {
+				list($method, $auth) = explode(" ", $_SERVER["HTTP_AUTHORIZATION"], 2);
+				if (($method == "Basic") && (($auth = base64_decode($auth)) !== false)) {
+					list($username, $password) = explode(":", $auth, 2);
+					if ($this->login_password($username, $password, false) == false) {
+						header("Status: 401");
+					} else {
+						$this->bind_to_ip();
+					}
+				}
 			}
 
 			if (isset($_SESSION["user_id"])) {
 				if (time() - $_SESSION["last_private_visit"] >= SESSION_TIMEOUT) {
 					$this->logout();
-				} else if (($_SESSION["binded_ip"] === NO) || ($_SESSION["binded_ip"] === $this->client_ip)) {
+				} else if (($_SESSION["binded_ip"] === NO) || ($_SESSION["binded_ip"] === $_SERVER["REMOTE_ADDR"])) {
 					$this->load_user_record($_SESSION["user_id"]);
 				}
 			}
@@ -52,7 +60,6 @@
 			switch ($key) {
 				case "logged_in": return $this->logged_in;
 				case "is_admin": return $this->is_admin;
-				case "client_ip": return $this->client_ip;
 				case "do_not_track": return $_SERVER["HTTP_DNT"] == 1;
 				case "session_via_database": return $this->session->using_database;
 				default:
@@ -152,16 +159,36 @@
 				return false;
 			}
 
-			if (($user = $this->db->entry("users", $key, "one_time_key")) == false) {
+			$query = "select * from users where one_time_key=%s and status!=%d limit 1";
+			if (($data = $this->db->execute($query, $key, USER_STATUS_DISABLED)) == false) {
 				sleep(1);
 				return false;
 			}
+			$user = $data[0];
 
 			$query = "update users set one_time_key=null where id=%d";
 			$this->db->query($query, $user["id"]);
 
 			$this->login((int)$user["id"]);
 			$this->bind_to_ip();
+
+			return true;
+		}
+
+		/* Login via SSL client authentication
+		 *
+		 * INPUT:  int certificate serial number
+		 * OUTPUT: boolean serial number valid
+		 * ERROR:  -
+		 */
+		public function login_ssl_auth($cert_serial) {
+			$query = "select * from users where cert_serial=%d and status!=%d limit 1";
+			if (($data = $this->db->execute($query, $cert_serial, USER_STATUS_DISABLED)) == false) {
+				return false;
+			}
+			$user = $data[0];
+
+			$this->login((int)$user["id"]);
 
 			return true;
 		}
@@ -189,6 +216,8 @@
 		 * ERROR:  -
 		 */
 		public function access_allowed($page) {
+			static $access = array();
+
 			/* Always access
 			 */
 			$allowed = array(LOGOUT_MODULE);
@@ -206,6 +235,12 @@
 			 */
 			if (count($this->record["role_ids"]) == 0) {
 				return false;
+			}
+
+			/* Cached?
+			 */
+			if (isset($access[$page])) {	
+				return $access[$page];
 			}
 
 			/* Check access
@@ -240,7 +275,9 @@
 				}
 			}
 
-			return max(array_flatten($access)) > 0;
+			$access[$page] = max(array_flatten($access)) > 0;
+
+			return $access[$page];
 		}
 
 		/* Bind current session to IP address
@@ -250,7 +287,7 @@
 		 * ERROR:  -
 		 */
 		public function bind_to_ip() {
-			$_SESSION["binded_ip"] = $this->client_ip;
+			$_SESSION["binded_ip"] = $_SERVER["REMOTE_ADDR"];
 		}
 
 		/* Verify if user has a certain role
@@ -268,7 +305,7 @@
 				}
 			} else if (is_array($role)) {
 				foreach ($role as $item) {
-					if ($this->has_role($item)) {	
+					if ($this->has_role($item)) {
 						return true;
 					}
 				}

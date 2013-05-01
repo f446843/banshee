@@ -5,7 +5,7 @@
 		public function get_words($char) {
 			$result = array();
 
-			foreach ($this->words as $word) {	
+			foreach ($this->words as $word) {
 				$first = strtolower(substr($word, 0, 1));
 				if ($char == "0") {
 					if ((ord($first) < ord("a")) || (ord($first) > ord("z"))) {

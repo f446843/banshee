@@ -2,10 +2,28 @@
 <?php
 	/* This script will remove all the demo content in your Banshee installation.
 	 */
-	exit("Edit me before using!\n"); # REMOVE THIS LINE BEFORE USAGE
+	if (($argv[1] != "for") && ($argv[2] != "sure")) {
+		exit("Use 'for sure' as the parameter for this script.\n");
+	}
 
     chdir(dirname($argv[0]));
 	require("../libraries/banshee.php");
+
+	function truncate_directory($dir) {
+		$dir = "../".$dir;
+		if (($dp = opendir($dir)) == false) {
+			return;
+		}
+
+		while (($file = readdir($dp)) != false) {
+			if ($file[0] == ".") {
+				continue;
+			}
+			unlink($dir."/".$file);
+		}
+
+		closedir($dp);
+	}
 
 	/* Demo page files
 	 */
@@ -25,15 +43,8 @@
 
 	/* Demo content on disk
 	 */
-	if (($dp = opendir("../public/files")) != false) {
-		while (($file = readdir($dp)) != false) {
-			if ($file[0] == ".") {
-				continue;
-			}
-			unlink("../public/files/".$file);
-		}
-		closedir($dp);
-	}
+	truncate_directory("public/files");
+	truncate_directory("public/photos");
 
 	/* Demo content in database
 	 */

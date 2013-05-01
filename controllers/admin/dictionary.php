@@ -32,7 +32,7 @@
 			}
 
 			$this->output->add_javascript("ckeditor/ckeditor.js");
-			$this->output->add_javascript("start_ckeditor.js");
+			$this->output->add_javascript("banshee/start_ckeditor.js");
 
 			$this->output->record($word, "edit");
 		}

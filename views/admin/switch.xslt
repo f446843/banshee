@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../includes/banshee.xslt" />
+<xsl:include href="../banshee/main.xslt" />
 
 <!--
 //
@@ -20,7 +20,7 @@
 </xsl:for-each>
 </table>
 
-<input type="button" value="Back" class="button" onClick="javascript:document.location='/admin'" />
+<a href="/admin" class="button">Back</a>
 </xsl:template>
 
 <!--

@@ -83,7 +83,7 @@
 			if ($this->db->query("begin") == false) {
 				return false;
 			}
-			
+
 			if ($faq["select"] == "new") {
 				if (($faq["section_id"] = $this->get_section_id($faq["label"])) == false) {
 					$this->db->query("rollback");
@@ -94,7 +94,7 @@
 			} else {
 				return false;
 			}
-			
+
 			if ($this->db->insert("faqs", $faq, $keys) === false) {
 				$this->db->query("rollback");
 				return false;
@@ -109,7 +109,7 @@
 			if ($this->db->query("begin") == false) {
 				return false;
 			}
-			
+
 			if ($faq["select"] == "new") {
 				if (($faq["section_id"] = $this->get_section_id($faq["label"])) == false) {
 					$this->db->query("rollback");

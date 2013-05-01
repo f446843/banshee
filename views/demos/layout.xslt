@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../includes/banshee.xslt" />
+<xsl:include href="../banshee/main.xslt" />
 
 <!--
 //
@@ -21,6 +21,8 @@ Available layout: <select name="layout" class="text">
 </form>
 <p>You can make a layout active by specifying it in settings/website.conf.</p>
 <p>For more themes, visit the <a href="http://www.banshee-php.org/download">Banshee website</a>.</p>
+
+<a href="/demos" class="button">Back</a>
 </xsl:template>
 
 <!--

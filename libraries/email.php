@@ -16,6 +16,7 @@
 		protected $text_message = null;
 		protected $html_message = null;
 		protected $attachments = array();
+		protected $images = array();
 		protected $sender_address = null;
 		protected $message_fields = array();
 		protected $field_format = "[%s]";
@@ -170,8 +171,10 @@
 				$this->html_message = $message;
 				if ($this->text_message === null) {
 					$message = str_replace("\n", "", $message);
-					$message = str_replace("<br>", "\n", $message);
-					$message = str_replace("</p>", "\n\n", $message);
+					$message = str_replace("<br>", "<br>\n", $message);
+					$message = str_replace("</p>", "</p>\n\n", $message);
+					$message = str_replace("<div", "\n<div", $message);
+					$message = preg_replace('/<head>.*<\/head>/', "", $message);
 					$this->text_message = strip_tags($message);
 				}
 			} else {
@@ -192,7 +195,7 @@
 				if (file_exists($filename) == false) {
 					return false;
 				}
-				if (($content = file_get_contents($filename, FILE_BINARY)) == false) {	
+				if (($content = file_get_contents($filename, FILE_BINARY)) == false) {
 					return false;
 				}
 				$content_type = mime_content_type($filename);
@@ -215,6 +218,33 @@
 				"content_type" => $content_type));
 
 			return true;
+		}
+
+		/* Add inline image
+		 *
+		 * INPUT:  string filename
+		 * OUTPUT: true
+		 * ERROR:  false
+		 */
+		public function add_image($filename) {
+			if (file_exists($filename) == false) {
+				return false;
+			}
+			if (($content = file_get_contents($filename, FILE_BINARY)) == false) {
+				return false;
+			}
+
+			$content_type = mime_content_type($filename);
+			$content_id = md5($image["content"]);
+
+			/* Add attachment
+			 */
+			array_push($this->images, array(
+				"content"      => $content,
+				"content_type" => $content_type,
+				"content_id"   => $content_id));
+
+			return $content_id;
 		}
 
 		/* Set field values for message
@@ -261,9 +291,58 @@
 		 */
 		private function message_block($boundary, $content_type, $message) {
 			$message = $this->populate_message_fields($message);
+			$format =
+				"--%s\n".
+				"Content-Type: %s\n".
+				"Content-Transfer-Encoding: 7bit\n\n".
+				"%s\n\n";
 
-			$format = "--%s\nContent-Type: %s\nContent-Transfer-Encoding: 7bit\n\n%s\n\n";
 			return sprintf($format, $boundary, $content_type, $message);
+		}
+
+		/* Convert HTML message and inline images to message body
+		 *
+		 * INPUT:  string boundary
+		 * OUTPUT: string body block
+		 * ERROR:  -
+		 */
+		private function html_message($boundary) {
+			$message = "";
+			$image_count = count($this->images);
+
+			/* Create multipart/related block
+			 */
+			if ($image_count > 0) {
+				$message .= "--".$boundary."\n";
+				$boundary = substr(md5($boundary), 0, 20);
+				$message .= "Content-Type: multipart/related; boundary=".$boundary."\n\n";
+			}
+
+			/* Add HTML message
+			 */
+			$message .= $this->message_block($boundary, "text/html", $this->html_message);
+
+			/* Add inline images
+			 */
+			if ($image_count > 0) {
+				$format =
+					"--%s\n".
+					"Content-Disposition: inline\n".
+					"Content-Type: %s\n".
+					"Content-ID: <%s>\n".
+					"Content-Transfer-Encoding: base64\n\n".
+					"%s\n\n";
+
+				foreach ($this->images as $image) {
+					$content = base64_encode($image["content"]);
+					$content = wordwrap($content, 70, "\n", true);
+					$message .= sprintf($format, $boundary, $image["content_type"], $image["content_id"], $content);
+				}
+
+				$message .= "--".$boundary."--\n\n";
+			}
+
+			return $message;
 		}
 
 		/* Send e-mail
@@ -306,7 +385,7 @@
 					$headers = array("Content-Type: multipart/alternative; boundary=".$email_boundary);
 					$message = "This is a multi-part message in MIME format.\n";
 					$message .= $this->message_block($email_boundary, "text/plain", $this->text_message);
-					$message .= $this->message_block($email_boundary, "text/html", $this->html_message);
+					$message .= $this->html_message($email_boundary);
 				}
 			} else {
 				/* With attachments
@@ -325,23 +404,26 @@
 					$message .= "--".$email_boundary."\n".
 						"Content-Type: multipart/alternative; boundary=".$message_boundary."\n\n";
 					$message .= $this->message_block($message_boundary, "text/plain", $this->text_message);
-					$message .= $this->message_block($message_boundary, "text/html", $this->html_message);
+					$message .= $this->html_message($message_boundary);
 					$message .= "--".$message_boundary."--\n\n";
 				}
 
 				/* Add attachments
 				 */
+				$format .= 
+					"--%s\n".
+					"Content-Disposition: attachment;\n".
+					"\tfilename=\"%s\"\n".
+					"Content-Type: %s;\n".
+					"\tname=\"%s\"\n".
+					"Content-Transfer-Encoding: base64\n\n".
+					"%s\n\n";
+
 				foreach ($this->attachments as $attachment) {
 					$content = base64_encode($attachment["content"]);
 					$content = wordwrap($content, 70, "\n", true);
-					$message .=
-						"--".$email_boundary."\n".
-						"Content-Disposition: attachment;\n".
-						"\tfilename=\"".$attachment["filename"]."\"\n".
-						"Content-Type: ".$attachment["content_type"].";\n".
-						"\tname=\"".$attachment["filename"]."\"\n".
-						"Content-Transfer-Encoding: base64\n\n".
-						$content."\n\n";
+					$message .= sprintf($format, $email_boundary, $attachment["filename"],
+						$attachment["content_type"], $attachment["filename"], $content);
 				}
 			}
 
@@ -364,13 +446,13 @@
 
 			/* Carbon Copies
 			 */
-			if (count($this->cc) > 0) {	
+			if (count($this->cc) > 0) {
 				array_push($headers, "CC: ".implode(", ", $this->cc));
 			}
 
 			/* Blind Carbon Copies
 			 */
-			if (count($this->bcc) > 0) {	
+			if (count($this->bcc) > 0) {
 				array_push($headers, "BCC: ".implode(", ", $this->bcc));
 			}
 
@@ -379,6 +461,7 @@
 			foreach ($headers as &$header) {
 				$header = str_replace("\n", "", $header);
 				$header = str_replace("\r", "", $header);
+				unset($header);
 			}
 
 			/* Send the e-mail
@@ -386,6 +469,8 @@
 			if (mail(implode(", ", $this->to), $this->subject, $message, implode("\n", $headers), $sender) == false) {
 				return false;
 			}
+
+			unset($message);
 
 			$this->to = array();
 			$this->cc = array();

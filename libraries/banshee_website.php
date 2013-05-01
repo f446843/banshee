@@ -19,18 +19,19 @@
 
 			/* Set output parameter to xml
 			 */
+			$output_setting = "output=xml";
 			$parameters = explode("&", $parameters);
 			$found = false;
-			foreach ($parameters as &$parameter) {
+			foreach ($parameters as $i => $parameter) {
 				list($key, $value) = explode("=", $parameter);
 				if ($key == "output") {
-					$parameter = "output=xml";
+					$parameters[$i] = $output_setting;
 					$found = true;
 					break;
 				}
 			}
 			if ($found == false) {
-				array_push($parameters, "output=xml");
+				array_push($parameters, $output_setting);
 				$output_xml = true;
 			}
 

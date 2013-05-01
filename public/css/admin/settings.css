@@ -10,8 +10,7 @@ table.list th.type {
 	width:100px;
 }
 
-input.button {
-	margin-top:15px;
+input.button, a.button {
 	margin-right:10px;
 }
 

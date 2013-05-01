@@ -110,7 +110,7 @@
 					}
 				}
 			} else {
-				/* Use PHP's session handling 
+				/* Use PHP's session handling
 				 */
 				session_name(SESSION_NAME);
 				if (is_true(SESSION_PERSISTENT)) {
@@ -142,7 +142,7 @@
 					return false;
 				}
 
-				$session_id = random_string();
+				$session_id = random_string(100);
 
 				if (($result = $this->db->execute($query, $session_id)) === false) {
 					return false;

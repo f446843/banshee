@@ -15,8 +15,8 @@
 		private $language = null;
 		private $description = null;
 		private $keywords = null;
-		private $system_messages = arraY();
-		private $system_warnings = arraY();
+		private $system_messages = array();
+		private $system_warnings = array();
 		private $messages = array();
 		private $javascripts = array();
 		private $onload_javascript = array();
@@ -27,6 +27,9 @@
 		private $content_type = "text/html; charset=utf-8";
 		private $layout = LAYOUT_SITE;
 		private $disabled = false;
+		private $mobile = false;
+		private $add_layout_data = true;
+		private $hiawatha_cache = false;
 
 		/* Constructor
 		 *
@@ -39,16 +42,39 @@
 			$this->settings = $settings;
 			$this->page = $page;
 
-			if (isset($_GET["output"])) {
-				$this->mode = $_GET["output"];
-			} else if ($this->page->ajax_request) {
+			if ($this->page->ajax_request) {
 				$this->mode = "xml";
+				$this->add_layout_data = false;
+			} else if (isset($_GET["output"])) {
+				$this->mode = $_GET["output"];
+				if (in_array($this->mode, array("restxml", "restjson"))) {
+					$this->mode = substr($this->mode, 4);
+					$this->add_layout_data = false;
+				}
 			}
 
 			$this->language = $this->settings->default_language;
 			$this->description = $this->settings->head_description;
 
 			$this->set_layout();
+
+			/* Mobile devices
+			 */
+			$mobiles = array("iPhone", "Android");
+			foreach ($mobiles as $mobile) {
+        		if (strpos($_SERVER["HTTP_USER_AGENT"], $mobile) !== false) {
+		            $this->mobile = true;
+					if ($this->add_javascript("banshee/mobile.js")) {
+						$this->run_javascript("hide_url_bar()");
+					}
+					if (LAYOUT_MOBILE != "") {
+						$this->set_layout(LAYOUT_MOBILE);
+					} else if ($this->layout == LAYOUT_SITE) {
+						$this->add_css("banshee/mobile.css");
+					}
+					break;
+				}
+			}
 		}
 
 		/* Constructor
@@ -78,6 +104,8 @@
 				case "content_type": return $this->content_type;
 				case "layout": return $this->layout;
 				case "disabled": return $this->disabled;
+				case "mobile": return $this->mobile;
+				case "add_layout_data": return $this->add_layout_data;
 			}
 
 			return parent::__get($key);
@@ -98,9 +126,49 @@
 				case "title": $this->title = $value; break;
 				case "inline_css": $this->inline_css = $value; break;
 				case "content_type": $this->content_type = $value; break;
-				case "disabled": $this->disabled = $value; break;
 				default: trigger_error("Unknown output variable: ".$key);
 			}
+		}
+
+		/* Disable the output library
+		 *
+		 * INPUT:  -
+		 * OUTPUT: -
+		 * ERROR:  -
+		 */
+		public function disable() {
+			$this->disabled = true;
+			parent::clear_buffer();
+		}
+
+		/* Allow caching of output by Hiawatha
+		 *
+		 * INPUT:  -
+		 * OUTPUT: -
+		 * ERROR:  -
+		 */
+		public function allow_hiawatha_cache() {
+			list($webserver) = explode(" ", $_SERVER["SERVER_SOFTWARE"], 2);
+
+			if ($webserver != "Hiawatha") {
+				return;
+			} else if ($this->settings->hiawatha_cache_time <= 0) {
+				return;
+			} else if (isset($_SESSION["user_switch"])) {	
+				return;
+			} else if (is_true(DEBUG_MODE)) {
+				return;
+			} else if ($_SERVER["REQUEST_METHOD"] != "GET") {
+				return;
+			} else if (count($this->system_messages) > 0) {
+				return;
+			} else if (count($this->system_warnings) > 0) {
+				return;
+			} else if (count($this->messages) > 0) {
+				return;
+			}
+
+			$this->hiawatha_cache = true;
 		}
 
 		/* Add CSS link to output
@@ -131,6 +199,9 @@
 		public function add_javascript($script) {
 			if ((substr($script, 0, 7) != "http://") && (substr($script, 0, 8) != "https://")) {
 				if (file_exists("js/".$script) == false) {
+					if (is_true(DEBUG_MODE)) {
+						printf("Javascript %s not found.", $script);
+					}
 					return false;
 				}
 
@@ -146,12 +217,12 @@
 
 		/* Set onload function of body tag
 		 *
-		 * INPUT:  string javascript function
+		 * INPUT:  string javascript code
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function onload_javascript($function) {
-			array_push($this->onload_javascript, rtrim($function, ";").";");
+		public function run_javascript($code) {
+			array_push($this->onload_javascript, rtrim($code, ";").";");
 		}
 
 		/* Add alternate link
@@ -184,7 +255,7 @@
 					}
 				}
 			} else {
-				if (file_exists("../views/includes/".$layout.".xslt") == false) {
+				if (file_exists("../views/banshee/layout_".$layout.".xslt") == false) {
 					return false;
 				}
 
@@ -209,6 +280,8 @@
 			$format = array_shift($args);
 
 			array_push($this->system_messages, vsprintf($format, $args));
+
+			$this->hiawatha_cache = false;
 		}
 
 		/* Add system warning to output
@@ -226,6 +299,8 @@
 			$format = array_shift($args);
 
 			array_push($this->system_warnings, vsprintf($format, $args));
+
+			$this->hiawatha_cache = false;
 		}
 
 		/* Add message to message buffer
@@ -243,6 +318,8 @@
 			$format = array_shift($args);
 
 			array_push($this->messages, vsprintf($format, $args));
+
+			$this->hiawatha_cache = false;
 		}
 
 		/* Close XML tag
@@ -252,7 +329,7 @@
 		 * ERROR:  -
 		 */
 		public function close_tag() {
-			if (($this->page->ajax_request == false) && ($this->depth == 1)) {
+			if ($this->add_layout_data && ($this->depth == 1)) {
 				/* System messages
 				 */
 				if (count($this->system_messages) > 0) {
@@ -283,7 +360,7 @@
 					$this->close_tag();
 				}
 
-				$this->open_tag($this->layout);
+				$this->open_tag("layout_".$this->layout);
 
 				/* Header information
 				 */
@@ -370,6 +447,9 @@
 					}
 					$attr = array();
 					foreach ($item["attributes"] as $attrib_key => $attrib_value) {
+						if (($attrib_key == "id") && is_numeric($attrib_value)) {
+							$attrib_value = (int)$attrib_value;
+						}
 						$attr["@".$attrib_key] = $attrib_value;
 					}
 					$value = array_merge($attr, $value);
@@ -392,6 +472,33 @@
 			return $result;
 		}
 
+		/* Check if it's ok to gzip output
+		 *
+		 * INPUT:  str output
+		 * OUTPUT: bool ok to gzip output
+		 * ERROR:  -
+		 */
+		private function can_gzip_output($data) {
+			if (strlen($data) < 256) {
+				return false;
+			} else if (headers_sent()) {	
+				return false;
+			} else if (($encodings = $_SERVER["HTTP_ACCEPT_ENCODING"]) === null) {
+				return false;
+			} else if ($this->hiawatha_cache) {
+				return false;
+			}
+
+			$encodings = explode(",", $encodings);
+			foreach ($encodings as $encoding) {
+				if (trim($encoding) == "gzip") {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		/* Generate output via XSLT
 		 *
 		 * INPUT:  -
@@ -408,54 +515,49 @@
 					$data = $this->array;
 					$data = $this->optimize_for_json($data);
 					header("Content-Type: application/json");
-					print json_encode($data["output"]);
+					$result = json_encode($data["output"]);
 					break;
 				case "xml":
 					header("Content-Type: text/xml");
-					print $this->document;
+					$result = $this->document;
 					break;
 				case "data":
 					header("Content-Type: text/plain");
-					print $this->document;
+					$result = $this->document;
 					break;
 				case null:
 					$xslt_file = "../views/".$this->page->view.".xslt";
-					if (($html = parent::transform($xslt_file)) === false) {
-						print "XSL Transformation error";
-						return;
+					if (($result = parent::transform($xslt_file)) === false) {
+						header("Status: 500");
+						header("Content-Type: text/plain");
+						$result = "Banshee: Fatal XSL Transformation error.\n";
+						$result .= sprintf("%s: file not found or invalid XML.\n", substr($xslt_file, 3));
+						break;
 					}
 
-					/* GZip content encoding
-					 */
-					$encodings = $_SERVER["HTTP_ACCEPT_ENCODING"];
-					$php_gzip = ini_get("zlib.output_compression");
-					if (($encodings !== null) && (strlen($html) >= 1024) && is_false($php_gzip) && (headers_sent() == false)) {
-						$encodings = explode(",", $encodings);
-						foreach ($encodings as $encoding) {
-							$encoding = trim($encoding);
-							if ($encoding == "gzip") {
-								header("Content-Encoding: gzip");
-								$html = gzencode($html, 6);
-								break;
-							}
-						}
-					}
-
-					/* Print output
+					/* Print headers
 					 */
 					if (headers_sent() == false) {
+						if ($this->hiawatha_cache) {
+							header("X-Hiawatha-Cache: ".$this->settings->hiawatha_cache_time);
+						}
 						header("Content-Type: ".$this->content_type);
 						header("Content-Language: ".$this->language);
-						if (is_false($php_gzip)) {
-							header("Content-Length: ".strlen($html));
+						if (is_false(ini_get("zlib.output_compression"))) {
+							if ($this->can_gzip_output($result)) {
+								header("Content-Encoding: gzip");
+								$result = gzencode($result, 6);
+							}
+							header("Content-Length: ".strlen($result));
 						}
 						header("X-Powered-By: Banshee PHP framework v".BANSHEE_VERSION);
 					}
-					print $html;
 					break;
 				default:
-					print "Unknown output type";
+					$result = "Unknown output type";
 			}
+
+			return $result;
 		}
 	}
 ?>

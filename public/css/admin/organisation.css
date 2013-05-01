@@ -12,3 +12,7 @@ h4 {
 	margin:30px 0 5px 0;
 	color:#000000;
 }
+
+a.button, input.button {
+	margin-right:10px;
+}

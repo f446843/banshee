@@ -41,7 +41,6 @@ div.weblog div.timestamp {
 	float:right;
 	position:relative;
 	top:-18px;
-	height:0;
 	font-size:10px;
 	width:150px;
 }
@@ -111,6 +110,9 @@ form {
 }
 form input.text {
 	width:250px;
+}
+form input.button {
+	margin-right:10px;
 }
 form textarea.text {
 	margin-top:5px;

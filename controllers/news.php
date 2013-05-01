@@ -1,5 +1,5 @@
 <?php
-	require_once("../helpers/output.php");
+	require_once("../libraries/helpers/output.php");
 
 	class news_controller extends controller {
 		public function execute() {

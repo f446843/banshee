@@ -9,7 +9,7 @@
 		}
 
 		public function execute() {
-			if (($letters = $this->model->get_first_letters()) === false) {	
+			if (($letters = $this->model->get_first_letters()) === false) {
 				$this->output->add_tag("result", "Database error");
 				return;
 			}

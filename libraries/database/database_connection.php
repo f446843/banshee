@@ -43,8 +43,10 @@
 				return;
 			}
 
+			$remote_addr = isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : "localhost";
+
 			if (($fp = fopen($this->working_dir."/logfiles/database.log", "a")) !== false) {
-				$data = sprintf("----[ %s ]--[ %s ]--\n%s\n", date("r"), $_SERVER["REMOTE_ADDR"],implode("\n", $this->log));
+				$data = sprintf("----[ %s ]--[ %s ]--\n%s\n", date("r"), $remote_addr, implode("\n", $this->log));
 				fputs($fp, $data);
 				fclose($fp);
 			}
@@ -90,8 +92,8 @@
 
 		/* Flatten array to new array with depth 1
 		 *
-		 * INPUT:  array
-		 * OUTPUT: array
+		 * INPUT:  array data
+		 * OUTPUT: array data
 		 * ERROR:  -
 		 */
 		protected function flatten_array($data) {
@@ -213,8 +215,8 @@
 
 			/* Escape arguments
 			 */
-			foreach ($values as &$value) {
-				$value = call_user_func($this->db_escape_string, $value);
+			foreach ($values as $key => $value) {
+				$values[$key] = call_user_func($this->db_escape_string, $value);
 			}
 
 			/* Apply arguments to format
@@ -248,7 +250,7 @@
 				$parts = explode(" ", ltrim($args[0]), 2);
 				$statement = strtolower(array_shift($parts));
 				if (in_array($statement, array("select", "show")) == false) {
-					print "Dropped query that tried to change the database via a read-only database connection.\n";
+					print "Dropped query that tried to alter the database via a read-only database connection.\n";
 					return false;
 				}
 			}
@@ -335,6 +337,37 @@
 			}
 
 			return true;
+		}
+
+		/* Execute a SQL query, cache and return the result
+		 *
+		 * INPUT:  object database, string query[, mixed query parameter, ...]
+		 * OUTPUT: mixed result for 'select' and 'show' queries / int affected rows
+		 * ERROR:  false
+		 */
+		public function execute_cached() {
+			$args = func_get_args();
+			$cache_db = array_unshift($args);
+			$hash = md5(json_encode($args));
+
+			$cache = new cache($cache_db, "database_cache");
+
+			if ($cache->$hash !== null) {
+				$result = $cache->$hash;
+			} else {
+				$result = call_user_func_array(array($this, "execute"), $args);
+
+				if (is_array($result)) {
+					if (count($result) > 1) {
+						$timeout = defined(CACHE_TIMEOUT) ? CACHE_TIMEOUT : 3600;
+						$cache->$hash = $result;
+					}
+				}
+			}
+
+			unset($cache);
+
+			return $result;
 		}
 
 		/* Execute queries via transaction
@@ -483,7 +516,7 @@
 			}
 
 			$query = "delete from %S where id=%d";
-			if ($this->query($query, $table, $id) === false) {	
+			if ($this->query($query, $table, $id) === false) {
 				return false;
 			}
 

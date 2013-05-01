@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../includes/banshee.xslt" />
+<xsl:include href="../banshee/main.xslt" />
 
 <!--
 //
@@ -81,7 +81,6 @@
 	</li>
 	</xsl:for-each>
 	<form action="/{/output/page}/{../../deselect/@date}" method="post" onSubmit="javascript:return confirm('DELETE: Are you sure?')">
-		Block:<input type="checkbox" name="block" />
 		<input type="hidden" name="hostname" value="{@hostname}" />
 		<input type="submit" name="submit_button" value="delete" />
 	</form>
@@ -104,7 +103,7 @@
 <div style="clear:both"></div>
 <xsl:apply-templates select="referers" />
 <xsl:apply-templates select="result" />
-<input type="button" value="Back" class="button" onClick="javascript:document.location='/admin'" />
+<a href="/admin" class="button">Back</a>
 </xsl:template>
 
 </xsl:stylesheet>

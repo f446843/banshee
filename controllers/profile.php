@@ -1,11 +1,12 @@
 <?php
 	class profile_controller extends controller {
 		private function show_profile_form($profile) {
-			$this->output->add_javascript(PASSWORD_HASH.".js");
+			$this->output->add_javascript("banshee/".PASSWORD_HASH.".js");
 			$this->output->add_javascript("profile.js");
-			$this->output->onload_javascript("hash = window['".PASSWORD_HASH."'];");
+			$this->output->run_javascript("hash = window['".PASSWORD_HASH."'];");
 
 			$this->output->open_tag("edit");
+
 			$this->output->add_tag("username", $this->user->username);
 			$this->output->add_tag("fullname", $profile["fullname"]);
 			$this->output->add_tag("email", $profile["email"]);
@@ -14,6 +15,17 @@
 			} else {
 				$this->output->add_tag("cancel", "Back", array("page" => $this->settings->start_page));
 			}
+
+			/* Action log
+			 */
+			if (($actionlog = $this->model->last_account_logs()) !== false) {
+				$this->output->open_tag("actionlog");
+				foreach ($actionlog as $log) {
+					$this->output->record($log, "log");
+				}
+				$this->output->close_tag();
+			}
+
 			$this->output->close_tag();
 		}
 

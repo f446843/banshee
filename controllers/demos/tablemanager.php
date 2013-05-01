@@ -5,5 +5,6 @@
 		protected $back = "demos";
 		protected $icon = "page.png";
 		protected $log_column = "line";
+		protected $browsing = "pagination";
 	}
 ?>

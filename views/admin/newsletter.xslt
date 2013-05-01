@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../includes/banshee.xslt" />
+<xsl:include href="../banshee/main.xslt" />
 
 <!--
 //
@@ -14,7 +14,7 @@
 <textarea name="content" class="text"><xsl:value-of select="content" /></textarea>
 <input type="submit" name="submit_button" value="Send newsletter" class="button" onClick="javascript:return confirm('SEND: Are you sure?')" />
 <input type="submit" name="submit_button" value="Preview newsletter" class="button" />
-<input type="button" value="Back" class="button" onClick="javascript:document.location='/admin'" />
+<a href="/admin" class="button">Back</a>
 </form>
 </xsl:template>
 

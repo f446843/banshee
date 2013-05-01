@@ -9,8 +9,7 @@
 	class OpenStreetMap extends HTTP {
 		private $cache = null;
 		private $hostname = "pafciu17.dev.openstreetmap.org";
-		private $types = array("mapnik", "osmarender", "hiking", "cloudmade_1",
-			"cloudmade_2", "cloudmade_5", "cloudmade_998", "cloudmade_999");
+		private $types = array("mapnik", "cycle", "osma");
 		private $colors = array("red", "blue", "green");
 		private $formats = array("png", "jpg", "gif");
 		private $type = null;
@@ -32,7 +31,7 @@
 
 		/* Magic method set
 		 *
-		 * INPUT:  string key 
+		 * INPUT:  string key
 		 * OUTPUT: mixed value
 		 * ERROR:  null
 		 */
@@ -46,8 +45,8 @@
 
 		private function location_string_to_array($location) {
 			$parts = explode(",", $location);
-			foreach ($parts as &$part) {
-				$part = strtolower(trim($part));
+			foreach ($parts as $i => $part) {
+				$parts[$i] = strtolower(trim($part));
 			}
 
 			return $parts;

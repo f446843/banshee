@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../includes/banshee.xslt" />
-<xsl:include href="../includes/pagination.xslt" />
+<xsl:include href="../banshee/main.xslt" />
+<xsl:include href="../banshee/pagination.xslt" />
 <!--
 //
 //  Overview template
@@ -18,14 +18,14 @@
 <td><xsl:value-of select="ip_address" /></td>
 <td><form action="/admin/guestbook" method="post">
 <input type="hidden" name="id" value="{@id}" />
-<input type="submit" name="submit_button" value="delete" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
+<input type="submit" name="submit_button" value="delete" class="small button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </form></td>
 </tr>
 </xsl:for-each>
 </table>
 <xsl:apply-templates select="pagination" />
 
-<input type="button" value="Back" class="button" onClick="javascript:document.location='/admin'" />
+<a href="/admin" class="button">Back</a>
 </xsl:template>
 
 <!--

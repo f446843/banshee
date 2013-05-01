@@ -17,3 +17,7 @@ table.list th.delete {
 table.list input.button {
 	border:1px solid #000000;
 }
+
+input.small {
+	padding:0 20px;
+}

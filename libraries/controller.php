@@ -1,5 +1,5 @@
 <?php
-	/* libraries/oo/controller.php
+	/* libraries/controller.php
 	 *
 	 * Copyright (C) by Hugo Leisink <hugo@leisink.net>
 	 * This file is part of the Banshee PHP framework

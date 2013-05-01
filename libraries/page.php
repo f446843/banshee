@@ -20,7 +20,7 @@
 		private $is_public = true;
 		private $pathinfo = array();
 		private $parameters = array();
-		private $ajax_request = null;
+		private $ajax_request = false;
 		private $write_access = true;
 
 		/* Constructor
@@ -36,14 +36,8 @@
 
 			/* AJAX request
 			 */
-			$this->ajax_request = $_SERVER["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest";
-			if ($_GET["output"] == "ajax") {
-				if (is_true(DEBUG_MODE)) {
-					$this->ajax_request = true;
-					$_GET["output"] = "xml";
-				} else {	
-					unset($_GET["output"]);
-				}
+			if (($_SERVER["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest") || ($_GET["output"] == "ajax")) {
+				$this->ajax_request = true;
 			}
 
 			/* Select module
@@ -51,21 +45,29 @@
 			if (is_false(WEBSITE_ONLINE) && ($_SERVER["REMOTE_ADDR"] != WEBSITE_ONLINE)) {
 				$page = "offline";
 			} else if ($this->db->connected == false) {
-				$page = ERROR_MODULE;
+				$this->module = ERROR_MODULE;
 				$this->http_code = 500;
 			} else {
 				list($this->url) = explode("?", $_SERVER["REQUEST_URI"], 2);
 				$path = trim($this->url, "/");
-
-				$page = valid_input($path, VALIDATE_URL, VALIDATE_NONEMPTY) ? $path : $this->settings->start_page;
-				$this->pathinfo = secure_input(explode("/", $page));
+				if ($path == "") {
+					$page = $this->settings->start_page;
+				} else if (valid_input($path, VALIDATE_URL, VALIDATE_NONEMPTY)) {
+					$page = $path;
+				} else {
+					$this->module = ERROR_MODULE;
+					$this->http_code = 404;
+				}
+				$this->pathinfo = explode("/", $page);
 			}
 
-			$this->select_module($page);
+			if ($this->module === null) {
+				$this->select_module($page);
+			}
 
 			/* Write access
 			 */
-			if (in_array($this->module, oproar_pages())) {
+			if (in_array($this->module, private_rorw_pages())) {
 				$query = "select count(*) as count from users u, user_role l, roles r ".
 						 "where u.id=%d and u.id=l.user_id and l.role_id=r.id and %S=%d";
 				if (($result = $db->execute($query, $this->user->id, $this->module, ACCESS_YES)) !== false) {
@@ -86,10 +88,10 @@
 			$_SESSION["previous_module"] = $this->module;
 			$_SESSION["last_visit"] = time();
 		}
-		
+
 		/* Magic method get
 		 *
-		 * INPUT:  string key 
+		 * INPUT:  string key
 		 * OUTPUT: mixed value
 		 * ERROR:  null
 		 */
@@ -183,7 +185,7 @@
 			/* Old browser
 			 */
 			if (preg_match("/MSIE [567]/", $_SERVER["HTTP_USER_AGENT"]) > 0) {
-				$this->module = "system/browser";
+				$this->module = "banshee/browser";
 				return;
 			}
 

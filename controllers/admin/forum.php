@@ -1,5 +1,5 @@
 <?php
-	require_once("../helpers/output.php");
+	require_once("../libraries/helpers/output.php");
 
 	class admin_forum_controller extends controller {
 		private function show_message_overview() {

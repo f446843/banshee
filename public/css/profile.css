@@ -13,3 +13,12 @@ table.form tr.current td {
 	height:30px;
 	vertical-align:bottom;
 }
+
+h2 {
+	margin-top:30px;
+}
+
+table.list {
+	margin-top:15px;
+	width:100%;
+}

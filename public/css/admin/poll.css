@@ -1,5 +1,3 @@
-@import url("/css/includes/calendar.css");
-
 /* Overview
  */
 table.list {
@@ -25,7 +23,7 @@ span.date {
 	display:block;
 	float:left;
 }
-input.button {
+input.button, a.button {
 	margin-right:10px;
 }
 table.form {
@@ -38,5 +36,5 @@ input.long {
 	width:300px;
 }
 table.form td:first-child {
-	width:70px;	
+	width:70px;
 }

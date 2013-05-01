@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../includes/banshee.xslt" />
+<xsl:include href="../banshee/main.xslt" />
 
 <!--
 //
@@ -12,10 +12,7 @@
 
 <h3>Appointment in the future</h3>
 <table class="list">
-<thead>
 <tr><th class="title">Title</th><th class="date">Begin</th><th class="date">End</th></tr>
-</thead>
-<tbody>
 <xsl:for-each select="appointments/appointment[begin&gt;$now]">
 <xsl:sort select="begin" order="ascending" />
 <tr class="click" onclick="javascript:document.location='/admin/agenda/{@id}'">
@@ -24,15 +21,11 @@
 <td><xsl:value-of select="end_show" /><xsl:if test="all_day='no'">, <xsl:value-of select="end_time" /></xsl:if></td>
 </tr>
 </xsl:for-each>
-</tbody>
 </table>
 
 <h3>Appointment in the past</h3>
 <table class="list">
-<thead>
 <tr><th class="title">Title</th><th class="date">Begin</th><th class="date">End</th></tr>
-</thead>
-<tbody>
 <xsl:for-each select="appointments/appointment[begin&lt;$now]">
 <xsl:sort select="begin" order="descending" />
 <tr class="click" onclick="javascript:document.location='/admin/agenda/{@id}'">
@@ -41,11 +34,10 @@
 <td><xsl:value-of select="end_show" /><xsl:if test="all_day='no'">, <xsl:value-of select="end_time" /></xsl:if></td>
 </tr>
 </xsl:for-each>
-</tbody>
 </table>
 
-<input type="button" value="New appointment" onClick="javascript:document.location='/admin/agenda/new'" class="button" />
-<input type="button" value="Back" onClick="javascript:document.location='/admin'" class="button" />
+<a href="/admin/agenda/new" class="button">New appointment</a>
+<a href="/admin" class="button">Back</a>
 </xsl:template>
 
 <!--
@@ -69,7 +61,7 @@
 
 <div class="knoppenbalk">
 <input type="submit" name="submit_button" value="Save appointment" class="button" />
-<input type="button" value="Cancel" onClick="javascript:document.location='/admin/agenda'" class="button" />
+<a href="/admin/agenda" class="button">Cancel</a>
 <xsl:if test="@id">
 <input type="submit" name="submit_button" value="Delete appointment" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>

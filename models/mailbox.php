@@ -1,9 +1,9 @@
 <?php
-	require("../helpers/output.php");
+	require("../libraries/helpers/output.php");
 
 	class mailbox_model extends model {
-		public function get_mailbox() {
-			$query = "select m.id, m.from_user_id, m.subject, UNIX_TIMESTAMP(m.timestamp) as timestamp, m.read, u.fullname as from_user ".
+		public function get_inbox() {
+			$query = "select m.id, m.from_user_id, m.subject, UNIX_TIMESTAMP(m.timestamp) as timestamp, m.read, u.fullname as user ".
 			         "from mailbox m, users u where m.from_user_id=u.id and m.to_user_id=%d and (m.deleted_by is null or m.deleted_by!=m.to_user_id) ".
 			         "order by timestamp desc";
 
@@ -11,7 +11,7 @@
 		}
 
 		public function get_sentbox() {
-			$query = "select m.id, m.from_user_id, m.subject, UNIX_TIMESTAMP(m.timestamp) as timestamp, m.read, u.fullname as to_user ".
+			$query = "select m.id, m.from_user_id, m.subject, UNIX_TIMESTAMP(m.timestamp) as timestamp, m.read, u.fullname as user ".
 			         "from mailbox m, users u where m.to_user_id=u.id and m.from_user_id=%d and (m.deleted_by is null or m.deleted_by!=m.from_user_id) ".
 			         "order by timestamp desc";
 

@@ -1,3 +1,39 @@
+banshee (4.0) stable; urgency=low
+
+  * Support for login via client SSL certificate.
+  * Improved support for mobile devices.
+  * Improved support for API requests.
+  * API test module added.
+  * Improved menu administration and menu library.
+  * Converted smilies, BBcodes and spam detection helpers to library
+      and improved BBcode rewriting.
+  * Converted CSV helper to CSV library.
+  * CKEditor updated to 4.1.
+  * jQuery updated to 1.9.1, jQuery UI updated to 1.10.2.
+  * Added DataTables jQuery plugin.
+  * Directory helpers moved to libraries.
+  * Account activity overview added to profile module.
+  * Replaced Slimbox2 with prettyPhoto.
+  * Renamed subdirectories includes and system to banshee.
+  * Renamed post_data library to validator.
+  * Renamed onload_javascript() to run_javascript().
+  * Removed MySQL driver, use MySQLi instead.
+  * Removed php.js.
+  * Small improvements.
+
+ -- Hugo Leisink <hugo@leisink.net>  Tue, 30 Apr 2013 11:55:42 +0200
+
+banshee (3.7) stable; urgency=low
+
+  * Global button style. Replaced many buttons with anchor tag.
+  * Renewed secure cookie and AES256 library.
+  * jQuery updated to 1.8.3, jQuery UI updated to 1.9.1.
+  * CKEditor updated to 4.0.
+  * Inline image support in e-mail library.
+  * Small improvements.
+
+ -- Hugo Leisink <hugo@leisink.net>  Mon, 24 Dec 2012 14:29:17 +0100
+
 banshee (3.6) stable; urgency=low
 
   * Removed SlimStat because there is no active development and Piwik
@@ -14,7 +50,7 @@ banshee (3.5) stable; urgency=low
   * Photos are stored on disk instead of in database.
   * Default password hash function changed from MD5 to SHA256.
   * Several improvements and small bugfixes.
-  
+
  -- Hugo Leisink <hugo@leisink.net>  Thu,  5 Jul 2012 22:11:43 +0200
 
 banshee (3.4) stable; urgency=low
@@ -88,7 +124,7 @@ banshee (2.6) stable; urgency=low
   * Session Manager module added.
   * Separate file for settings class. Other stuff moved to
     libraries/configuration.php
-  * Error handling functions moved from libraries/output.php to 
+  * Error handling functions moved from libraries/output.php to
     libraries/error.php.
   * Chunked content encoding support added to HTTP library.
   * JSON output type added.

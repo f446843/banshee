@@ -1,5 +1,5 @@
 <?php
-	require_once("../helpers/output.php");
+	require_once("../libraries/helpers/output.php");
 
 	class admin_weblog_controller extends controller {
 		private function show_weblog_overview() {
@@ -33,7 +33,7 @@
 
 		private function show_weblog_form($weblog) {
 			$this->output->add_javascript("ckeditor/ckeditor.js");
-			$this->output->add_javascript("start_ckeditor.js");
+			$this->output->add_javascript("banshee/start_ckeditor.js");
 
 			$this->output->open_tag("edit");
 
@@ -55,7 +55,7 @@
 			if (($tags = $this->model->get_tags()) != false) {
 				foreach ($tags as $tag) {
 					$this->output->add_tag("tag", $tag["tag"], array(
-						"id" => $tag["id"], 
+						"id" => $tag["id"],
 						"selected" => show_boolean(in_array($tag["id"], $tagged))));
 				}
 			}
@@ -100,7 +100,7 @@
 					if ($this->model->save_oke($_POST) == false) {
 						$this->show_weblog_form($_POST);
 					} else if (isset($_POST["id"]) == false) {
-						/* Create weblog 
+						/* Create weblog
 						 */
 						if ($this->model->create_weblog($_POST) == false) {
 							$this->output->add_message("Database error while creating weblog.");

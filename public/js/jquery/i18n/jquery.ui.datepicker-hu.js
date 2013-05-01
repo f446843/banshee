@@ -1,23 +1,4 @@
-/* Hungarian initialisation for the jQuery UI date picker plugin. */
-/* Written by Istvan Karaszi (jquery@spam.raszi.hu). */
-jQuery(function($){
-	$.datepicker.regional['hu'] = {
-		closeText: 'bezárás',
-		prevText: '&laquo;&nbsp;vissza',
-		nextText: 'előre&nbsp;&raquo;',
-		currentText: 'ma',
-		monthNames: ['Január', 'Február', 'Március', 'Április', 'Május', 'Június',
-		'Július', 'Augusztus', 'Szeptember', 'Október', 'November', 'December'],
-		monthNamesShort: ['Jan', 'Feb', 'Már', 'Ápr', 'Máj', 'Jún',
-		'Júl', 'Aug', 'Szep', 'Okt', 'Nov', 'Dec'],
-		dayNames: ['Vasárnap', 'Hétfö', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat'],
-		dayNamesShort: ['Vas', 'Hét', 'Ked', 'Sze', 'Csü', 'Pén', 'Szo'],
-		dayNamesMin: ['V', 'H', 'K', 'Sze', 'Cs', 'P', 'Szo'],
-		weekHeader: 'Hé',
-		dateFormat: 'yy-mm-dd',
-		firstDay: 1,
-		isRTL: false,
-		showMonthAfterYear: true,
-		yearSuffix: ''};
-	$.datepicker.setDefaults($.datepicker.regional['hu']);
-});
+/*! jQuery UI - v1.10.2 - 2013-03-14
+* http://jqueryui.com
+* Copyright 2013 jQuery Foundation and other contributors; Licensed MIT */
+jQuery(function(e){e.datepicker.regional.hu={closeText:"bezár",prevText:"vissza",nextText:"előre",currentText:"ma",monthNames:["Január","Február","Március","Április","Május","Június","Július","Augusztus","Szeptember","Október","November","December"],monthNamesShort:["Jan","Feb","Már","Ápr","Máj","Jún","Júl","Aug","Szep","Okt","Nov","Dec"],dayNames:["Vasárnap","Hétfő","Kedd","Szerda","Csütörtök","Péntek","Szombat"],dayNamesShort:["Vas","Hét","Ked","Sze","Csü","Pén","Szo"],dayNamesMin:["V","H","K","Sze","Cs","P","Szo"],weekHeader:"Hét",dateFormat:"yy.mm.dd.",firstDay:1,isRTL:!1,showMonthAfterYear:!0,yearSuffix:""},e.datepicker.setDefaults(e.datepicker.regional.hu)});

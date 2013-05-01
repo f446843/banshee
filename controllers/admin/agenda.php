@@ -16,17 +16,19 @@
 		}
 
 		public function show_appointment_form($appointment) {
+			$this->output->add_css("banshee/calendar.css");
+
 			$this->output->add_javascript("ckeditor/ckeditor.js");
-			$this->output->add_javascript("start_ckeditor.js");
-			$this->output->add_javascript("calendar.js");
-			$this->output->add_javascript("calendar-en.js");
-			$this->output->add_javascript("calendar-setup.js");
+			$this->output->add_javascript("banshee/start_ckeditor.js");
+			$this->output->add_javascript("banshee/calendar.js");
+			$this->output->add_javascript("banshee/calendar-en.js");
+			$this->output->add_javascript("banshee/calendar-setup.js");
 			$this->output->add_javascript("admin/agenda.js");
 
 			$appointment = $this->model->appointment_db_to_form($appointment);
 			$this->output->record($appointment, "edit");
 
-			$this->output->onload_javascript("setup_calendars('".$appointment["all_day"]."')");
+			$this->output->run_javascript("setup_calendars('".$appointment["all_day"]."')");
 		}
 
 		public function execute() {

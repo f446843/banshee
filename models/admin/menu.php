@@ -1,31 +1,47 @@
 <?php
 	class admin_menu_model extends model {
-		public function get_menu($menu_id) {
-			return $this->db->entry("menu", $menu_id);
-		}
+		private function structure_menu($menuitems, $parent_id) {
+			$menu = array();
 
-		public function get_menu_items($parent_id) {
-			$query = "select *,(select count(*) from menu where parent_id=m.id) as children ".
-					 "from menu m where parent_id=%d order by %S";
-			return $this->db->execute($query, $parent_id, "order");
-		}
-
-		public function menu_oke($data) {
-			$result = true;
-
-			if ($data["menu_id"] !== "0") {
-				if ($this->db->entry("menu", $data["menu_id"]) == false) {
-					$this->output->add_message("Menu not found.");
-					$result = false;
+			foreach ($menuitems as $item) {
+				if ($item["parent_id"] == $parent_id) {
+					$new = array(
+						"text" => $item["text"],
+						"link" => $item["link"]);
+					$submenu = $this->structure_menu($menuitems, $item["id"]);
+					if (count($submenu) > 0) {
+						$new["submenu"] = $submenu;
+					}
+					array_push($menu, $new);
 				}
 			}
 
-			if (is_array($data["menu"])) {
-				foreach ($data["menu"] as $item) {
-					if (($item["text"] == "") && ($item["link"] != "")) {
-						$this->output->add_message("Text can't be empty.");
+			return $menu;
+		}
+
+		public function get_menu() {
+			$query = "select * from menu order by id";
+			if (($menuitems = $this->db->execute($query)) === false) {
+				return false;
+			}
+
+			return $this->structure_menu($menuitems, 0);
+		}
+
+		public function menu_oke($menu) {
+			$result = true;
+
+			if (is_array($menu)) {
+				foreach ($menu as $item) {
+					if ((trim($item["text"]) == "") || (trim($item["link"]) == "")) {
+						$this->output->add_message("The text or link of a menu item can't be empty.");
 						$result = false;
-						break;
+					}
+
+					if (isset($item["submenu"])) {
+						if ($this->menu_oke($item["submenu"]) == false) {
+							$result = false;
+						}
 					}
 				}
 			}
@@ -33,63 +49,37 @@
 			return $result;
 		}
 
-		public function update_menu($parent_id, $menu) {
-			if (count($menu) == 0) {
-				$query = "delete from menu where parent_id=%d";
-				return $this->db->query($query, $parent_id) != false;
-			}
+		private function save_menu($menu, $parent_id) {
+			foreach ($menu as $item) {
+				$new = array(
+					"id"        => null,
+					"parent_id" => $parent_id,
+					"text"      => $item["text"],
+					"link"      => $item["link"]);
+				if ($this->db->insert("menu", $new) === false) {
+					return false;
+				}
 
-			foreach ($menu as $id => $item) {
-				if (trim($item["text"]) == "") {
-					unset($menu[$id]);
+				if (isset($item["submenu"])) {
+					if ($this->save_menu($item["submenu"], $this->db->last_insert_id) == false) {
+						return false;
+					}
 				}
 			}
 
+			return true;
+		}
+
+		public function update_menu($menu) {
 			$this->db->query("begin");
 
-			/* Delete items
-			 */
-			$query = "select * from menu where parent_id=%d";
-			if (($current = $this->db->execute($query, $parent_id)) === false) {
+			if ($this->db->execute("truncate table %S", "menu") === false) {
 				$this->db->query("rollback");
 				return false;
 			}
 
-			$ids = array_keys($menu);
-			foreach ($current as $item) {
-				if (in_array($item["id"], $ids) == false) {
-					if ($this->db->delete("menu", $item["id"]) === false) {
-						$this->db->query("rollback");
-						return false;
-					}
-				}
-			}
-
-			/* Add items
-			 */
-			$keys = array("id", "parent_id", "order", "text", "link");
-			foreach ($menu as $id => $item) {
-				if ($id < 0) {
-					$item["id"] = null;
-					$item["parent_id"] = $parent_id;
-					$item["order"] = 10;
-					if ($this->db->insert("menu", $item, $keys) === false) {
-						$this->db->query("rollback");
-						return false;
-					}
-					$menu[$id]["id"] = $this->db->last_insert_id;
-				} else {
-					$menu[$id]["id"] = $id;
-				}
-			}
-
-			/* Sort menu
-			 */
-			$order = 1;
-			$keys = array("order", "text", "link");
-			foreach ($menu as $item) {
-				$item["order"] = $order++;
-				if ($this->db->update("menu", $item["id"], $item, $keys) === false) {
+			if (is_array($menu)) {
+				if ($this->save_menu($menu, 0) == false) {
 					$this->db->query("rollback");
 					return false;
 				}

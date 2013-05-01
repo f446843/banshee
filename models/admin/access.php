@@ -7,11 +7,11 @@
 			}
 
 			$query = "select role_id from user_role where user_id=%d";
-			foreach ($users as &$user) {
+			foreach ($users as $i => $user) {
 				if (($roles = $this->db->execute($query, $user["id"])) === false) {
 					return false;
 				}
-				$user["roles"] = array_flatten($roles);
+				$users[$i]["roles"] = array_flatten($roles);
 			}
 
 			return $users;

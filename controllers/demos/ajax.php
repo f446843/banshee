@@ -3,7 +3,6 @@
 		private function ajax_request() {
 			if (isset($_REQUEST["answer"])) {
 				$result = $_REQUEST["answer"] == 3 ? "correct" : "wrong";
-				print "oke";
 				$this->output->add_tag("result", $result);
 			} else if (isset($_REQUEST["records"])) {
 				if (($records = $_REQUEST["records"]) > 10) {
@@ -30,9 +29,9 @@
 				return;
 			}
 
-			$this->output->add_javascript("ajax.js");
+			$this->output->add_javascript("banshee/ajax.js");
 			$this->output->add_javascript("demos/ajax.js");
-			$this->output->onload_javascript("set_focus()");
+			$this->output->run_javascript("set_focus()");
 		}
 	}
 ?>

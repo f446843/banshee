@@ -4,7 +4,8 @@
 			$this->output->title = "Captcha demo";
 
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
-				$this->output->add_tag("valid", show_boolean(valid_captcha_code($_POST["code"])));
+				$valid = captcha::valid_code($_POST["code"]);
+				$this->output->add_tag("valid", show_boolean($valid));
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="includes/banshee.xslt" />
+<xsl:include href="banshee/main.xslt" />
 
 <!--
 //
@@ -9,17 +9,17 @@
 //-->
 <xsl:template match="mailbox">
 <table class="list">
-<tr><th class="subject">Subject</th><th class="from">From</th><th class="date">Date</th></tr>
+<tr><th class="subject">Subject</th><th class="from"><xsl:value-of select="@column" /></th><th class="date">Date</th></tr>
 <xsl:for-each select="mail">
 <tr class="click {read}" onClick="javascript:document.location='/{/output/page}/{@id}'">
 <td><xsl:value-of select="subject" /></td>
-<td><xsl:value-of select="from_user" /></td>
+<td><xsl:value-of select="user" /></td>
 <td><xsl:value-of select="timestamp" /></td>
 </tr>
 </xsl:for-each>
 </table>
-<input type="button" value="New mail" class="button" onClick="javascript:document.location='/{/output/page}/new'" />
-<input type="button" value="{../link}" class="button" onClick="javascript:document.location='/{/output/page}{../link/@url}'" />
+<a href="/{/output/page}/new" class="button">New mail</a>
+<a href="/{/output/page}{../link/@url}" class="button"><xsl:value-of select="../link" /></a>
 </xsl:template>
 
 <!--
@@ -33,10 +33,10 @@
 <div class="from">From: <xsl:value-of select="from_user" /></div>
 <div class="message"><xsl:value-of disable-output-escaping="yes" select="message" /></div>
 <xsl:if test="@actions='yes'">
-<input type="button" value="Reply" class="button" onClick="javascript:document.location='/{/output/page}/reply/{@id}'" />
+<a href="/{/output/page}/reply/{@id}" class="button">Reply</a>
 </xsl:if>
 <input type="submit" name="submit_button" value="Delete mail" class="button" onClick="return confirm('DELETE: Are you sure?')" />
-<input type="button" value="Back" class="button" onClick="javascript:document.location='/{/output/page}'" />
+<a href="/{/output/page}{@back}" class="button">Back</a>
 </form>
 </xsl:template>
 
@@ -62,7 +62,7 @@
 </table>
 <textarea name="message" class="text"><xsl:value-of select="mail/message" /></textarea>
 <input type="submit" name="submit_button" value="Send mail" class="button" />
-<input type="button" value="Cancel" class="button" onClick="javascript:document.location='/{/output/page}'" />
+<a href="/{/output/page}" class="button">Cancel</a>
 </form>
 </xsl:template>
 
@@ -72,7 +72,7 @@
 //
 //-->
 <xsl:template match="content">
-<h1>Mailbox</h1>
+<h1><xsl:value-of select="title" /></h1>
 <xsl:apply-templates select="mailbox" />
 <xsl:apply-templates select="mail" />
 <xsl:apply-templates select="write" />

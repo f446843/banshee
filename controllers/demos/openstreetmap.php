@@ -12,11 +12,10 @@
 			$openstreetmap->set_center("Brussel, BE");
 
 			$openstreetmap->zoom = 6;
-			$openstreetmap->type = "osmarender";
 
 			$openstreetmap->show_static_map(640, 350);
 
-			$this->output->disabled = true;
+			$this->output->disable();
 		}
 
 		public function execute() {

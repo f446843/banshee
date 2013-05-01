@@ -28,11 +28,13 @@
 				$params = array("id" => $poll["id"]);
 			}
 
-			$this->output->add_javascript("calendar.js");
-			$this->output->add_javascript("calendar-en.js");
-			$this->output->add_javascript("calendar-setup.js");
+			$this->output->add_css("banshee/calendar.css");
+
+			$this->output->add_javascript("banshee/calendar.js");
+			$this->output->add_javascript("banshee/calendar-en.js");
+			$this->output->add_javascript("banshee/calendar-setup.js");
 			$this->output->add_javascript("admin/poll.js");
-			$this->output->onload_javascript("setup_calendars()");
+			$this->output->run_javascript("setup_calendars()");
 
 			$this->output->open_tag("edit");
 

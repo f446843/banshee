@@ -43,7 +43,7 @@
 
 	/* Get column information
 	 */
-	if (($columns_db = get_structure($db, "roles")) == false) {
+	if (($columns_db = get_structure($db, "roles")) === false) {
 		exit("Error while reading table structure.\n");
 	}
 	$columns_new = get_columns(private_pages());

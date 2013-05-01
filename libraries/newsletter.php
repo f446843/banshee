@@ -17,6 +17,8 @@
 		 * ERROR:  -
 		 */
 		public function __construct($subject, $from_address = null, $from_name = null) {
+			$subject = utf8_decode($subject);
+
 			array_push($this->footers, "Banshee website: <a href=\"http://".$_SERVER["SERVER_NAME"]."/\">".$_SERVER["SERVER_NAME"]."</a>");
 			array_push($this->footers, "To unsubscribe from this newsletter, click <a href=\"http://".$_SERVER["SERVER_NAME"]."/newsletter\">here</a>.");
 			parent::__construct($subject, $from_address, $from_name);
@@ -38,9 +40,11 @@
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function message($content) {	
+		public function message($content) {
+			$content = utf8_decode($content);
+
 			$content = str_replace("\n\n", "</p>\n<p>", $content);
-			$content = str_replace("\n", "<br>", $content);
+			$content = str_replace("\n", "<br>\n", $content);
 
 			$footer = implode("<span style=\"margin:0 10px\">|</span>", $this->footers);
 

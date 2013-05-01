@@ -70,7 +70,7 @@
 				foreach ($files["files"] as $filename) {
 					$file = array(
 						"name"   => $filename,
-						"link"   => "/".$directory."/".urlencode($filename),
+						"link"   => "/".$directory."/".rawurlencode($filename),
 						"size"   => $this->model->get_file_size($directory."/".$filename),
 						"delete" => "yes");
 					$this->output->record($file, "file");

@@ -1,5 +1,5 @@
 <?php
-	require_once("../helpers/output.php");
+	require_once("../libraries/helpers/output.php");
 
 	class admin_faq_controller extends controller {
 		public function show_faq_overview() {
@@ -12,7 +12,7 @@
 			}
 
 			$this->output->open_tag("overview");
-			
+
 			$this->output->open_tag("sections");
 			foreach ($sections as $section) {
 				$this->output->add_tag("section", $section["label"], array("id" => $section["id"]));
@@ -40,7 +40,7 @@
 			}
 
 			$this->output->add_javascript("ckeditor/ckeditor.js");
-			$this->output->add_javascript("start_ckeditor.js");
+			$this->output->add_javascript("banshee/start_ckeditor.js");
 
 			$this->output->open_tag("edit");
 
@@ -88,10 +88,10 @@
 					 */
 					if ($this->model->delete_faq($_POST["id"]) == false) {
 						$this->output->add_message("Error while deleting F.A.Q.");
-						show_faq_form($_POST);
+						$this->show_faq_form($_POST);
 					} else {
 						$this->user->log_action("faq %d deleted", $_POST["id"]);
-						show_faq_overview();
+						$this->show_faq_overview();
 					}
 				} else {
 					$this->show_faq_overview();

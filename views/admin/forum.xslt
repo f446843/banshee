@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../includes/banshee.xslt" />
-<xsl:include href="../includes/pagination.xslt" />
+<xsl:include href="../banshee/main.xslt" />
+<xsl:include href="../banshee/pagination.xslt" />
 
 <!--
 //
@@ -16,11 +16,11 @@
 <div class="timestamp"><xsl:value-of select="timestamp" /></div>
 <div class="ip_address"><xsl:value-of select="ip_address" /></div>
 <div class="action">
-	<input type="button" value="view" onClick="javascript:document.location='/forum/topic/{topic_id}#{@id}'" class="action" />
-	<input type="button" value="edit" onClick="javascript:document.location='/admin/forum/{@id}'" class="action" />
+	<a href="/forum/topic/{topic_id}#{@id}" class="small button">view</a>
+	<a href="/admin/forum/{@id}" class="small button">edit</a>
 	<form action="/admin/forum" method="post">
 	<input type="hidden" name="message_id" value="{@id}" />
-	<input type="submit" name="submit_button" value="delete" class="action" onClick="javascript:return confirm('DELETE: Are you sure?')" />
+	<input type="submit" name="submit_button" value="delete" class="small button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 	</form>
 </div>
 <div class="message">
@@ -31,7 +31,8 @@
 </xsl:for-each>
 <xsl:apply-templates select="pagination" />
 
-<input type="button" value="Back" onClick="javascript:document.location='/admin'" class="button" />
+<a href="/admin" class="button">Back</a>
+<a href="/admin/forum/section" class="button">Forum sections</a>
 </xsl:template>
 
 <!--
@@ -45,7 +46,7 @@
 <input type="hidden" name="id" value="{message/@id}" />
 <p><textarea name="content" class="text"><xsl:value-of select="message/content" /></textarea></p>
 <input type="submit" name="submit_button" value="Save message" class="button" />
-<input type="button" value="Cancel" onClick="javascript:document.location='/admin/forum'" class="button" />
+<a href="/admin/forum" class="button">Cancel</a>
 </form>
 </xsl:template>
 

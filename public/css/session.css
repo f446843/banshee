@@ -1,4 +1,4 @@
-table.list {	
+table.list {
 	width:100%;
 	margin-bottom:15px;
 }
@@ -11,6 +11,6 @@ table.edit {
 	margin-bottom:15px;
 }
 
-input.button {
+a.button, input.button {
 	margin-right:10px;
 }

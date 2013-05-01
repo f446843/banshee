@@ -9,7 +9,7 @@
 
 	chdir(dirname($argv[0])."/settings");
 	require("../libraries/banshee.php");
-	require("../helpers/console.php");
+	require("../libraries/helpers/console.php");
 
 	print "Remove Banshee Module\n\n";
 
@@ -22,9 +22,12 @@
 		"agenda" => array(
 			"pages"     => array("agenda", "admin/agenda"),
 			"tables"    => array("agenda")),
+		"apitest" => array(
+			"pages"     => array("admin/apitest")),
 		"captcha" => array(
 			"pages"     => array("captcha"),
-			"libraries" => array("captcha")),
+			"libraries" => array("captcha"),
+			"files"     => array("extra/captcha_font.ttf")),
 		"contact" => array(
 			"pages"     => array("contact"),
 			"settings"  => array("contact\_%")),
@@ -48,7 +51,8 @@
 		"logging" => array(
 			"pages"     => array("admin/logging"),
 			"libraries" => array("logging"),
-			"tables"    => array("log_page_views", "log_referers", "log_search_queries", "log_visits")),
+			"tables"    => array("log_page_views", "log_referers", "log_search_queries", "log_visits"),
+			"files"     => array("database/verify_referer_log")),
 		"mailbox" => array(
 			"pages"     => array("mailbox"),
 			"tables"    => array("mailbox")),
@@ -60,9 +64,11 @@
 			"pages"     => array("newsletter", "admin/newsletter", "admin/subscriptions"),
 			"libraries" => array("newsletter"),
 			"tables"    => array("subscriptions"),
-			"settings"  => array("newsletter\_%")),
+			"settings"  => array("newsletter\_%"),
+			"files"     => array("extra/newsletter.txt")),
 		"password" => array(
-			"pages"     => array("password")),
+			"pages"     => array("password"),
+			"files"     => array("extra/reset_password.txt")),
 		"photo" => array(
 			"pages"     => array("photo", "collection", "admin/photos", "admin/albums", "admin/collection"),
 			"libraries" => array("image"),
@@ -176,6 +182,17 @@
 				}
 			}
 
+			/* Files
+			 */
+			if (isset($module["files"])) {
+				foreach ($module["files"] as $file) {
+					$file = "../".$file;
+					if (file_exists($file)) {
+						unlink($file);
+					}
+				}
+			}
+
 			/* Settings
 			 */
 			if (isset($module["settings"])) {
@@ -210,7 +227,7 @@
 						continue 2;
 					}
 				}
-				
+
 				fputs($fp, $line);
 			}
 

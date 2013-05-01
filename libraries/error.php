@@ -26,16 +26,18 @@
 	final class website_error_handler {
 		private $output = null;
 		private $settings = null;
+		private $user = null;
 
 		/* Constructor
 		 *
-		 * INPUT:  object output, object settings
+		 * INPUT:  object output, object settings, object user
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function __construct($output, $settings) {
+		public function __construct($output, $settings, $user) {
 			$this->output = $output;
 			$this->settings = $settings;
+			$this->user = $user;
 		}
 
 		/* Add errors to output
@@ -73,6 +75,7 @@
 				"Date, time: ".date("j F Y, H:i:s")."\n".
 				"Used URL  : ".$_SERVER["REQUEST_URI"]."\n".
 				"IP address: ".$_SERVER["REMOTE_ADDR"]."\n".
+				"Username  : ".($this->user->username != null ? $this->user->username."\n" : "-\n").
 				"User-Agent: ".$_SERVER["HTTP_USER_AGENT"]."\n".
 				"\n".$errors;
 
@@ -89,13 +92,8 @@
 		 * ERROR:  -
 		 */
 		public function execute($errors) {
-			if ($this->output->disabled) {
-				print $errors;
-				return;
-			}
-
 			$errors = str_replace("<br />", "", trim($errors));
-			if (is_true(DEBUG_MODE)) { 
+			if (is_true(DEBUG_MODE)) {
 				$this->add_to_output($errors);
 			} else {
 				$this->send_via_email($errors);

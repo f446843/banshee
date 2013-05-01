@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../includes/banshee.xslt" />
+<xsl:include href="../banshee/main.xslt" />
 
 <!--
 //
@@ -18,8 +18,8 @@
 </xsl:for-each>
 </table>
 
-<input type="button" value="New role" class="button" onClick="javascript:document.location='/admin/role/new'" />
-<input type="button" value="Back" class="button" onClick="javascript:document.location='/admin'" />
+<a href="/admin/role/new" class="button">New role</a>
+<a href="/admin" class="button">Back</a>
 </xsl:template>
 
 <!--
@@ -75,7 +75,7 @@
 <xsl:if test="role/@editable='yes'">
 <input type="submit" name="submit_button" value="Save role" class="button" />
 </xsl:if>
-<input type="button" value="Cancel" class="button" onClick="javascript:document.location='/admin/role'" />
+<a href="/admin/role" class="button">Cancel</a>
 <xsl:if test="role/@id and role/@editable='yes'">
 <input type="submit" name="submit_button" value="Delete role" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>

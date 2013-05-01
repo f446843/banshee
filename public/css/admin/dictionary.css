@@ -15,7 +15,7 @@ table.edit td:first-child {
 	padding-top:4px;
 	width:100px;
 }
-input.button {
+a.button, input.button {
 	margin-right:10px;
 }
 input.text {

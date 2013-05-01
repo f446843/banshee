@@ -7,7 +7,7 @@
 			}
 
 			$this->output->open_tag("overview");
-				
+
 			$this->output->open_tag("collections");
 			foreach ($collections as $collection) {
 				$this->output->record($collection, "collection");
@@ -61,7 +61,7 @@
 						} else {
 							$this->show_collection_overview();
 						}
-					} else { 
+					} else {
 						/* Update collection
 					 	 */
 						if ($this->model->update_collection($_POST) == false) {
@@ -70,7 +70,7 @@
 							$this->show_collection_overview();
 						}
 					}
-				} else if ($_POST["submit_button"] == "Delete collection") {	
+				} else if ($_POST["submit_button"] == "Delete collection") {
 					/* Delete collection
 					 */
 					if ($this->model->delete_collection($_POST["id"]) == false) {

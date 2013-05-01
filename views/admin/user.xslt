@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../includes/banshee.xslt" />
-<xsl:include href="../includes/pagination.xslt" />
+<xsl:include href="../banshee/main.xslt" />
+<xsl:include href="../banshee/pagination.xslt" />
 
 <!--
 //
@@ -26,8 +26,8 @@
 </table>
 <xsl:apply-templates select="pagination" />
 
-<input type="button" value="New user" class="button" onClick="javascript:document.location='/admin/user/new'" />
-<input type="button" value="Back" class="button" onClick="javascript:document.location='/admin'" />
+<a href="/admin/user/new" class="button">New user</a>
+<a href="/admin" class="button">Back</a>
 </xsl:template>
 
 <!--
@@ -76,6 +76,7 @@
 </xsl:for-each>
 </select></td></tr>
 </xsl:if>
+<tr><td>Certificate serial:</td><td><input type="text" name="cert_serial" value="{user/cert_serial}" class="text" /></td></tr>
 <tr><td valign="top">Roles:</td><td>
 <xsl:for-each select="roles/role">
 <div><input type="checkbox" name="roles[{@id}]" value="{@id}" class="role">
@@ -85,13 +86,17 @@
 <xsl:if test="@checked='yes'">
 <xsl:attribute name="checked">checked</xsl:attribute>
 </xsl:if>
-</input><xsl:value-of select="." /></div>
+</input><xsl:value-of select="." />
+<xsl:if test="@enabled='no'">
+<input type="hidden" name="roles[{@id}]" value="{@id}" />
+</xsl:if>
+</div>
 </xsl:for-each>
 </td></tr>
 </table>
 
 <input type="submit" name="submit_button" value="Save user" class="button" />
-<input type="button" value="Cancel" class="button" onClick="javascript:document.location='/admin/user'" />
+<a href="/admin/user" class="button">Cancel</a>
 <xsl:if test="user/@id and not(user/@id=/output/user/@id)">
 <input type="submit" name="submit_button" value="Delete user" class="button" onClick="javascript:return confirm('DELETE: Are you sure?')" />
 </xsl:if>

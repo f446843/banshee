@@ -31,3 +31,7 @@ fieldset.create {
 fieldset.create input.text {
 	width:250px;
 }
+
+input.small {
+	padding:0 5px;
+}

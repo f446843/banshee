@@ -46,16 +46,19 @@
 			}
 			$this->output->close_tag();
 
-			$read_write = oproar_pages();
+			$rorw_pages = private_rorw_pages();
 
 			/* Roles
 			 */
 			$this->output->add_tag("role", $role["name"], $params);
 			$this->output->open_tag("pages");
 			foreach ($pages as $page) {
+				if (($value = $role[$page]) == null) {
+					$value = 0;
+				}
 				$this->output->add_tag("page", $page, array(
-					"type"  => in_array($page, $read_write) ? "select" : "checkbox",
-					"value" => $role[$page]));
+					"type"  => in_array($page, $rorw_pages) ? "select" : "checkbox",
+					"value" => $value));
 			}
 			$this->output->close_tag();
 

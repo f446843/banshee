@@ -16,9 +16,9 @@
 	 */
 	do {
 		print "Enter MySQL root password: ";
-		system("stty -echo");
+		system("/bin/stty -echo");
 		$password = trim(fgets(STDIN));
-		system("stty echo");
+		system("/bin/stty echo");
 		print "\n";
 	} while ($password == "");
 
@@ -89,4 +89,7 @@
 
 	$settings = new settings($db);
 	$settings->secret_website_code = random_string();
+
+	$query = "update users set status=%d";
+	$db->query($query, USER_STATUS_CHANGEPWD);
 ?>

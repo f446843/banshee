@@ -19,13 +19,12 @@
 
 			$query = "select * from photos where photo_album_id=%d and overview=%d";
 			foreach ($albums as &$album) {
-				if (($thumbnails = $this->db->execute($query, $album["id"], YES)) == false) {
-					continue;
+				if (($thumbnails = $this->db->execute($query, $album["id"], YES)) != false) {
+					$photo = rand(0, count($thumbnails) - 1);
+					$album["extension"] = $thumbnails[$photo]["extension"];
+					$album["thumbnail"] = $thumbnails[$photo]["id"];
 				}
-
-				$photo = rand(0, count($thumbnails) - 1);
-				$album["extension"] = $thumbnails[$photo]["extension"];
-				$album["thumbnail"] = $thumbnails[$photo]["id"];
+				unset($album);
 			}
 
 			return $albums;

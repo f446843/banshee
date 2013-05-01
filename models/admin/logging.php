@@ -94,11 +94,10 @@
 		}
 
 		public function get_referers($day = null) {
-
-			$query = "select hostname, sum(count) as count from log_referers";
-			$args = array();
+			$query = "select hostname, sum(count) as count from log_referers where verified=%d";
+			$args = array(1);
 			if ($day !== null) {
-				$query .= " where date=%s";
+				$query .= " and date=%s";
 				array_push($args, $day);
 			}
 			$query .= " group by hostname order by count desc";
@@ -109,11 +108,11 @@
 
 			$referers = array();
 
-			$query = "select url,sum(count) as count from log_referers where ";
+			$query = "select url,sum(count) as count from log_referers where verified=%d";
 			if ($day !== null) {
-				$query .= " date=%s and";
+				$query .= " and date=%s";
 			}
-			$query .= " hostname=%s group by url order by count desc";
+			$query .= " and hostname=%s group by url order by count desc";
 			foreach ($hosts as $host) {
 				if (($result = $this->db->execute($query, $args, $host["hostname"])) === false) {
 					return false;

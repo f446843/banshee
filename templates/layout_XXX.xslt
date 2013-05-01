@@ -17,7 +17,7 @@
 <xsl:for-each select="alternates/alternate">
 <link rel="alternate" title="{.}"  type="{@type}" href="{@url}" />
 </xsl:for-each>
-<link rel="stylesheet" type="text/css" href="/css/includes/layout_XXX.css" />
+<link rel="stylesheet" type="text/css" href="/css/banshee/layout_XXX.css" />
 <xsl:for-each select="styles/style">
 <link rel="stylesheet" type="text/css" href="{.}" />
 </xsl:for-each>

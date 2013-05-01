@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="includes/banshee.xslt" />
-<xsl:include href="includes/pagination.xslt" />
+<xsl:include href="banshee/main.xslt" />
+<xsl:include href="banshee/pagination.xslt" />
 
 <!--
 //
@@ -41,8 +41,8 @@
 <xsl:apply-templates select="pagination" />
 
 <div class="buttonbar">
-<input type="button" value="New topic" onClick="javascript:document.location='/{/output/page}/{@id}/new'" class="button" />
-<input type="button" value="Back" onClick="javascript:document.location='/{/output/page}'" class="button" />
+<a href="/{/output/page}/{@id}/new" class="button">New topic</a>
+<a href="/{/output/page}" class="button">Back</a>
 </div>
 </xsl:template>
 
@@ -80,7 +80,7 @@
 <xsl:call-template name="smilies" />
 
 <input type="submit" name="submit_button" value="Post response" class="button" />
-<input type="button" value="Back" onClick="javascript:document.location='/{/output/page}/{@forum_id}'" class="button" />
+<a href="/{/output/page}/{@forum_id}" class="button">Back</a>
 </form>
 </div>
 </xsl:template>
@@ -104,7 +104,7 @@
 <xsl:call-template name="smilies" />
 
 <input type="submit" name="submit_button" value="Create topic" class="button" />
-<input type="button" value="Back" onClick="javascript:document.location='/{/output/page}/{forum_id}'" class="button" />
+<a href="/{/output/page}/{forum_id}" class="button">Back</a>
 </form>
 </xsl:template>
 

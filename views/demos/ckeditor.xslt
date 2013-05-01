@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-<xsl:include href="../includes/banshee.xslt" />
+<xsl:include href="../banshee/main.xslt" />
 
 <!--
 //
@@ -11,7 +11,7 @@
 <form method="post" action="/demos/ckeditor">
 <textarea id="editor" name="editor"></textarea>
 <input type="submit" name="save" value="Submit" class="button" />
-<input type="button" value="Back" class="button" onClick="javascript:document.location='/demos'" />
+<a href="/demos" class="button">Back</a>
 </form>
 </xsl:template>
 
@@ -24,7 +24,7 @@
 <div style="border:1px solid #000000 ; width:600px ; height:300px"><xsl:value-of select="editor" /></div>
 <br />
 
-<input type="button" value="Back" class="button" onClick="javascript:document.location='/demos/ckeditor'" />
+<a href="/demos/ckeditor" class="button">Back</a>
 </xsl:template>
 
 <!--

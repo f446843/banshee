@@ -1,0 +1,62 @@
+#!/usr/bin/php
+<?php
+	chdir(dirname($argv[0]));
+	require("../libraries/banshee.php");
+
+	/* Connect to database
+	 */
+	$db = new MySQLi_connection(DB_HOSTNAME, DB_DATABASE, DB_USERNAME, DB_PASSWORD);
+	if ($db->connected == false) {
+		exit("Internal error: database not available.\n");
+	}
+
+	/* Load users
+	 */
+	if (($result = $db->execute("select * from users order by fullname")) == false) {
+		exit("Error querying users.\n");
+	}
+
+	$users = array();
+	foreach ($result as $item) {
+		$users[$item["id"]] = array(
+			"username"   => $item["username"],
+			"fullname"   => $item["fullname"],
+			"last_login" => 0);
+	}
+
+	/* Open actions logfile
+	 */
+	if (($fp = fopen("../logfiles/actions.log", "r")) == false) {
+		exit("Error opening actions logfile.\n");
+	}
+
+	/* Get last login
+	 */
+	while (($line = fgets($fp)) !== false) {
+		list($ip, $time, $user_id, $message) = explode("|", chop($line), 4);
+
+		if (isset($users[$user_id]) == false) {
+			continue;
+		}
+
+		if ($message != "user logged-in") {
+			continue;
+		}
+
+		$timestamp = strtotime($time);
+		if ($timestamp > $users[$user_id]["last_login"]) {
+			$users[$user_id]["last_login"] = $timestamp;
+		}
+	}
+
+	fclose($fp);
+
+	/* Show last logfins
+	 */
+	$now = time();
+	foreach ($users as $user) {
+		$last_login = date("j F Y, H:i:s", $user["last_login"]);
+		$days_ago = ($now - $user["last_login"]) / 86400;
+		printf("%s (%s): %s (%0.1f days ago)\n", $user["fullname"], $user["username"], $last_login, $days_ago);
+	}
+?>

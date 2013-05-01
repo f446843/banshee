@@ -41,7 +41,7 @@
 			$this->output->add_tag("title", $forum["title"]);
 
 			$this->output->open_tag("topics");
-			foreach ($forum["topics"] as $topic) {	
+			foreach ($forum["topics"] as $topic) {
 				if ($this->user->logged_in) {
 					$topic["unread"] = show_boolean($this->model->last_topic_view($topic["id"]) < $topic["timestamp"]);
 				}
@@ -59,7 +59,7 @@
 		private function show_smilies() {
 			$smilies = config_file("smilies");
 
-			$this->output->open_tag("smilies");	
+			$this->output->open_tag("smilies");
 			foreach ($smilies as $smiley) {
 				$smiley = explode("\t", chop($smiley));
 				$text = array_shift($smiley);
@@ -98,9 +98,14 @@
 					}
 					$message["timestamp"] = date("j F Y, H:i", $message["timestamp"]);
 					$message["content"] = preg_replace("/\[(config|code|quote)\]([\r\n]*)/", "[$1]", $message["content"]);
-					$message["content"] = unescaped_output($message["content"]);
-					$message["content"] = translate_bbcodes($message["content"]);
-					$message["content"] = translate_smilies($message["content"]);
+
+					$post = new message($message["content"]);
+					$post->unescaped_output();
+					$post->translate_bbcodes();
+					$post->translate_smilies();
+					$message["content"] = $post->content;
+					unset($post);
+
 					$this->output->record($message, "message", array("moderate" => show_boolean($moderate)));
 				}
 
@@ -151,7 +156,7 @@
 				/* Show topic
 				 */
 				$this->show_topic($this->page->pathinfo[2]);
-			} else if (valid_input($this->page->pathinfo[1], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {	
+			} else if (valid_input($this->page->pathinfo[1], VALIDATE_NUMBERS, VALIDATE_NONEMPTY)) {
 				if ($this->page->pathinfo[2] == "new") {
 					/* Start new topic
 					 */

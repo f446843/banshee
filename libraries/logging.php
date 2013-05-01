@@ -8,24 +8,23 @@
 	class logging {
 		private $db = null;
 		private $page = null;
-		private $settings = null;
 		private $today = null;
 		private $search_bots = array("Googlebot", "bingbot", "Baiduspider",
 			"YandexBot", "WBSearchBot", "Wotbox", "Yahoo! Slurp", "MJ12bot",
-			"AhrefsBot", "Blekkobot", "Thumbshots.ru");
+			"AhrefsBot", "Blekkobot", "Thumbshots", "Claws", "Sogou",
+			"MLBot", "Feedfetcher", "robot");
 		private $search_urls = array("www.google.", "www.bing.com");
 		private $referer_spam = array("viagra", "pharma", "cheap");
 
 		/* Constructor
 		 *
-		 * INPUT:  object database, object page, object settings
+		 * INPUT:  object database, object page
 		 * OUTPUT: -
 		 * ERROR:  -
 		 */
-		public function __construct($db, $page, $settings) {
+		public function __construct($db, $page) {
 			$this->db = $db;
 			$this->page = $page;
-			$this->settings = $settings;
 		}
 
 		/* Log visit
@@ -103,10 +102,6 @@
 			list($hostname) = explode(":", $hostname);
 
 			$dont_log = array($_SERVER["HTTP_HOST"], $_SERVER["SERVER_NAME"], "localhost", "127.0.0.1", "");
-			if ($this->settings->log_ignore_referers != null) {
-				$ignore = explode(",", $this->settings->log_ignore_referers);
-				$dont_log = array_merge($dont_log, $ignore);
-			}
 			if (in_array($hostname, $dont_log)) {
 				return;
 			}
@@ -124,6 +119,8 @@
 				}
 			}
 
+			list($referer) = explode("#", $referer, 2);
+
 			$query = "update log_referers set count=count+1 where hostname=%s and url=%s and date=%s";
 			if (($result = $this->db->execute($query, $hostname, $referer, $this->today)) === false) {
 				return;
@@ -136,7 +133,8 @@
 				"hostname" => $hostname,
 				"url"      => $referer,
 				"date"     => $this->today,
-				"count"    => 1);
+				"count"    => 1,
+				"verified" => 0);
 			$this->db->insert("log_referers", $data);
 		}
 

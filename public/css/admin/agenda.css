@@ -1,5 +1,3 @@
-@import url("/css/includes/calendar.css");
-
 /* Overview
  */
 table.list {
@@ -42,7 +40,7 @@ textarea.text {
 	height:250px;
 	margin-bottom:15px;
 }
-input.button {
+input.button, a.button {
 	margin-right:10px;
 }
 

@@ -32,6 +32,8 @@
 
 				$album["photo_id"] = $photo["id"];
 				$album["extension"] = $photo["extension"];
+
+				unset($album);
 			}
 
 			return $collection;
